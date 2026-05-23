@@ -60,8 +60,10 @@
 
   /* CARDS & STRIPS */
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
-  .card-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
-  .card-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .card-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
+  .card-title-line { display: flex; align-items: center; gap: 12px; flex: 1; }
+  .card-title-line::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  
   .strip { display: flex; align-items: flex-start; gap: 32px; flex-wrap: wrap; }
   .strip-item { flex: 1; min-width: 140px; }
   .strip-label { font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
@@ -81,13 +83,6 @@
   .input-group { display: flex; gap: 8px; }
   .input-group input:first-child { width: 80px; text-align: center; }
 
-  /* BOT VERIFICATION CHECKLIST */
-  .checklist { background: var(--bg); border: 1px solid var(--border-dark); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
-  .check-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 13px; }
-  .check-item:last-child { margin-bottom: 0; }
-  .check-item label { margin: 0; font-weight: 500; display: flex; align-items: center; gap: 8px; cursor:pointer;}
-  .fail-tag { font-size: 10px; background: var(--red-bg); color: var(--red); padding: 2px 6px; border-radius: 4px; font-weight: 600; display: none;}
-
   /* RESULT BOXES */
   .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px; }
   .result-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; border-left: 4px solid var(--border-dark); }
@@ -99,8 +94,8 @@
   /* BUTTONS */
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; background: var(--accent); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; width: 100%; margin-top: 24px; }
   .btn:hover { background: var(--accent-hover); } .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-small { padding: 6px 12px; font-size: 12px; background: transparent; color: var(--text-muted); border: 1px solid var(--border-dark); border-radius: 6px; width: auto; margin: 0; cursor:pointer;}
-  .btn-small:hover { border-color: var(--red); color: var(--red); }
+  .btn-small { padding: 6px 12px; font-size: 12px; background: var(--surface); color: var(--text-main); border: 1px solid var(--border-dark); border-radius: 6px; width: auto; margin: 0; cursor:pointer;}
+  .btn-small:hover { border-color: var(--accent); color: var(--accent); }
 
   /* PROGRESS & CHALLENGE */
   .progress-bg { height: 8px; background: var(--border); border-radius: 4px; margin-top: 8px; overflow: hidden; }
@@ -112,11 +107,12 @@
   .trade-dot.loss { background: var(--red-bg); border-color: rgba(184,75,75,0.3); color: var(--red); }
   .trade-dot.violation { background: var(--gold-bg); border-color: rgba(176,125,53,0.3); color: var(--gold); }
 
-  /* TABLES */
-  .positions-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .positions-table th { text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
-  .positions-table td { padding: 16px; border-bottom: 1px solid var(--border); color: var(--text-main); vertical-align: middle; }
-  
+  /* SLIDER */
+  .slider-viewport { overflow: hidden; width: 100%; position: relative; }
+  .slider-wrapper { display: flex; transition: transform 0.3s ease-in-out; }
+  .slider-slide { flex: 0 0 100%; min-width: 100%; padding-right: 2px; } /* padding for visual glitch */
+  .dd-card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+
   /* MORNING GATE MODAL */
   .gate-overlay { position: fixed; inset: 0; background: rgba(45, 43, 42, 0.9); backdrop-filter: blur(8px); z-index: 9999; display: flex; align-items: center; justify-content: center; }
   .gate-modal { background: var(--surface); border-radius: 16px; padding: 40px; width: 100%; max-width: 480px; margin: 20px; box-shadow: var(--shadow-lg); }
@@ -206,29 +202,11 @@
 
     <div class="grid-2">
       <div class="card">
-        <div class="card-title">Pre-Trade Verification & Sizing</div>
+        <div class="card-title"><div class="card-title-line">Sizing Calculator</div></div>
 
-        <div class="field">
-          <label>Ticker & Bot Verification</label>
-          <input type="text" id="ticker" placeholder="BREN" maxlength="6" style="text-transform:uppercase; margin-bottom:12px;" />
-          
-          <div class="checklist" id="botChecklist">
-            <div class="check-item">
-              <label><input type="checkbox" id="chkScore" /> Bot Score ≥ 80 / Early Stage</label>
-              <span class="fail-tag" id="failScore">FAIL</span>
-            </div>
-            <div class="check-item">
-              <label><input type="checkbox" id="chkAsing" /> Asing Net Buy / Neutral</label>
-              <span class="fail-tag" id="failAsing">INSTANT FAIL</span>
-            </div>
-            <div class="check-item">
-              <label><input type="checkbox" id="chkYP" /> YP NOT Dominant Buyer</label>
-              <span class="fail-tag" id="failYP">FAIL</span>
-            </div>
-            <div class="check-item" style="border-top:1px solid var(--border-dark); padding-top:10px; margin-top:10px;">
-              <label><input type="checkbox" id="chk2Day" /> 2-Day Accumulation Confirmed</label>
-            </div>
-          </div>
+        <div class="field" style="margin-bottom: 24px;">
+          <label>Ticker</label>
+          <input type="text" id="ticker" placeholder="BREN" maxlength="6" style="text-transform:uppercase;" />
         </div>
 
         <div id="calcWorkspace">
@@ -282,324 +260,6 @@
           </div>
           
           <div id="calcAlert" style="margin-top:16px; padding:12px; border-radius:8px; display:none; font-size:13px; font-weight:500;"></div>
-          <button class="btn" id="btnAddPos" onclick="openAddModal()">+ Log Position to Tracker</button>
+          <button class="btn" id="btnAddPos" onclick="alert('Logging functionality connected to backend/local storage.')">+ Log Position to Tracker</button>
         </div>
       </div>
-
-      <div>
-        <div class="card">
-          <div class="card-title">30-Trade Challenge Tracker (Current Tier)</div>
-          <div style="font-size:12px; color:var(--text-muted); line-height:1.4;">
-            Violation (Gold) or Missing SL resets the clean streak to zero. Capital scaling relies strictly on this counter.
-          </div>
-          <div class="challenge-grid" id="challengeGrid"></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">TP Protocol Reminder</div>
-          <div style="font-size:13px; color:var(--text-muted); line-height:1.6;">
-            <b>1. Entry:</b> Place SL immediately in Stockbit.<br>
-            <b>2. TP1 Hit:</b> Sell 40%. Move SL to Breakeven instantly. (Trade is now free).<br>
-            <b>3. TP2 Hit:</b> Sell 40%. Trail remaining 20% runner.<br>
-            <b>4. Hard Close:</b> 09:30 flat on class days.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="tab-risk" class="tab-content">
-    <div class="card">
-      <div class="card-title">Live Drawdown Monitor</div>
-      <div style="font-size:13px; color:var(--text-muted); margin-bottom: 24px;">
-        Limits are automatically calculated based on your active capital tier (<span id="riskCapText" style="font-weight:600">Rp 10M</span>).
-      </div>
-
-      <div class="grid-2">
-        <div style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:20px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-            <span style="font-weight:600">Daily P&L Limit (2%)</span>
-            <span style="font-weight:600; color:var(--red)" id="limitDailyDisp">-Rp 200,000</span>
-          </div>
-          <div style="font-size:24px; font-weight:600; margin-bottom:12px;" id="pnlDailyDisp">Rp 0</div>
-          <div class="progress-bg"><div class="progress-fill" id="barDaily" style="width:0%"></div></div>
-          <div style="font-size:12px; color:var(--text-muted); margin-top:8px;" id="actDailyDisp">Action: Close platform if hit.</div>
-        </div>
-
-        <div style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:20px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-            <span style="font-weight:600">Weekly Drawdown (3%)</span>
-            <span style="font-weight:600; color:var(--red)" id="limitWeeklyDisp">-Rp 300,000</span>
-          </div>
-          <div style="font-size:24px; font-weight:600; margin-bottom:12px;" id="pnlWeeklyDisp">Rp 0</div>
-          <div class="progress-bg"><div class="progress-fill" id="barWeekly" style="width:0%"></div></div>
-          <div style="font-size:12px; color:var(--text-muted); margin-top:8px;" id="actWeeklyDisp">Action: Revert to 10M tier next week if hit.</div>
-        </div>
-      </div>
-
-      <div style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:20px; margin-top:24px;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-          <span style="font-weight:600">Monthly Drawdown (7%)</span>
-          <span style="font-weight:600; color:var(--red)" id="limitMonthlyDisp">-Rp 700,000</span>
-        </div>
-        <div style="font-size:24px; font-weight:600; margin-bottom:12px;" id="pnlMonthlyDisp">Rp 0</div>
-        <div class="progress-bg"><div class="progress-fill" id="barMonthly" style="width:0%"></div></div>
-        <div style="font-size:12px; color:var(--text-muted); margin-top:8px;" id="actMonthlyDisp">Action: 5-Day Mandatory Pause & Audit if hit.</div>
-      </div>
-    </div>
-    
-    <div class="card">
-      <div class="card-title">Trade History (Local Session)</div>
-      <div id="positionsContainer" style="font-size:13px; color:var(--text-muted); text-align:center; padding:24px;">
-        No positions logged today.
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<script>
-// ── STATE ──
-let challengeData = JSON.parse(localStorage.getItem('buffon_challenge_v3') || 'null') || new Array(30).fill(0);
-let positions = JSON.parse(localStorage.getItem('buffon_pos_v3') || '[]');
-let activeCapital = 10000000;
-let cleanStreak = 0;
-const RISK_PCT = 0.5; // Locked at Survival Mode as per v3.1 override
-const MAX_CAP_PCT = 0.25;
-
-function fmt(n) { return Math.round(n).toLocaleString('id-ID'); }
-function fmtRp(n) { return 'Rp ' + fmt(n); }
-
-// ── UTILS ──
-function switchTab(tabId) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
-  event.target.classList.add('active');
-}
-
-// ── MORNING GATE ──
-function unlockPlatform() {
-  const focus = parseInt(document.getElementById('mgFocus').value) || 0;
-  const idr = parseFloat(document.getElementById('mgIDR').value) || 17600;
-  const macro = document.getElementById('mgMacro').value;
-  const err = document.getElementById('mgError');
-
-  if (focus < 7) {
-    err.style.display = 'block';
-    err.textContent = "CRITICAL FAIL: Focus score below 7. Protocol dictates no trading today. Close the application.";
-    document.getElementById('mgUnlockBtn').style.display = 'none';
-    return;
-  }
-  
-  if (macro === 'red') {
-    alert("DEFENSIVE PROTOCOL: Macro is Red. Wait 30 minutes after open before taking any entries.");
-  }
-
-  document.getElementById('morningGate').style.display = 'none';
-  calculateCapitalTier();
-  calcSizing();
-}
-
-// ── CAPITAL SCALING LOGIC ──
-function calculateCapitalTier() {
-  // Calculate current active streak
-  cleanStreak = 0;
-  for (let i = 0; i < challengeData.length; i++) {
-    if (challengeData[i] === 1 || challengeData[i] === 2) {
-      cleanStreak++;
-    } else if (challengeData[i] === 3) {
-      cleanStreak = 0; // Violation resets
-    }
-  }
-
-  // Tier assignment
-  if (cleanStreak >= 30) activeCapital = 25000000;
-  else if (cleanStreak >= 20) activeCapital = 20000000;
-  else if (cleanStreak >= 10) activeCapital = 15000000;
-  else activeCapital = 10000000;
-
-  // Update UI Tier Displays
-  document.getElementById('activeCapDisp').textContent = fmtRp(activeCapital);
-  document.getElementById('streakSubDisp').textContent = `${cleanStreak} clean trades streak`;
-  document.getElementById('maxLossDisp').textContent = fmtRp(activeCapital * (RISK_PCT/100));
-  document.getElementById('posCapDisp').textContent = fmtRp(activeCapital * MAX_CAP_PCT);
-  document.getElementById('riskCapText').textContent = fmtRp(activeCapital);
-
-  // Upgrade Progress Bar
-  let nextTarget = 10, currentProg = cleanStreak;
-  if (cleanStreak >= 30) { nextTarget = 30; currentProg = 30; document.getElementById('nextTierLabel').textContent = "MAX TIER REACHED (25M)"; }
-  else if (cleanStreak >= 20) { nextTarget = 30; document.getElementById('nextTierLabel').textContent = "Rp 25M Unlock"; }
-  else if (cleanStreak >= 10) { nextTarget = 20; document.getElementById('nextTierLabel').textContent = "Rp 20M Unlock"; }
-  
-  document.getElementById('streakCountDisp').textContent = `${currentProg}/${nextTarget}`;
-  document.getElementById('upgradeBar').style.width = Math.min((currentProg/nextTarget)*100, 100) + '%';
-  
-  updateDrawdownMonitor();
-}
-
-// ── CHECKLIST VERIFICATION ──
-const chkScore = document.getElementById('chkScore');
-const chkAsing = document.getElementById('chkAsing');
-const chkYP = document.getElementById('chkYP');
-const wsCalc = document.getElementById('calcWorkspace');
-
-function verifyBotRules() {
-  const isScoreOk = chkScore.checked;
-  const isAsingOk = chkAsing.checked;
-  const isYPOk = chkYP.checked;
-
-  document.getElementById('failScore').style.display = isScoreOk ? 'none' : 'inline-block';
-  document.getElementById('failAsing').style.display = isAsingOk ? 'none' : 'inline-block';
-  document.getElementById('failYP').style.display = isYPOk ? 'none' : 'inline-block';
-
-  if (!isScoreOk || !isAsingOk || !isYPOk) {
-    wsCalc.style.opacity = '0.3';
-    wsCalc.style.pointerEvents = 'none';
-  } else {
-    wsCalc.style.opacity = '1';
-    wsCalc.style.pointerEvents = 'auto';
-    calcSizing();
-  }
-}
-[chkScore, chkAsing, chkYP].forEach(el => el.addEventListener('change', verifyBotRules));
-verifyBotRules(); // init state
-
-// ── SYNC & SIZING (PCT <-> PRICE) ──
-const inputs = {
-  entry: document.getElementById('entry'),
-  sl: document.getElementById('sl'), slPct: document.getElementById('slPct'),
-  tp1: document.getElementById('tp1'), tp1Pct: document.getElementById('tp1Pct'),
-  tp2: document.getElementById('tp2'), tp2Pct: document.getElementById('tp2Pct')
-};
-
-function calcPriceFromPct(type) {
-  const entry = parseFloat(inputs.entry.value) || 0;
-  if (!entry) return;
-  const pct = parseFloat(inputs[type + 'Pct'].value) || 0;
-  if (type === 'sl') inputs.sl.value = Math.round(entry - (entry * (pct / 100)));
-  else inputs[type].value = Math.round(entry + (entry * (pct / 100)));
-  calcSizing();
-}
-
-function calcPctFromPrice(type) {
-  const entry = parseFloat(inputs.entry.value) || 0;
-  if (!entry) return;
-  const price = parseFloat(inputs[type].value) || 0;
-  if (!price) return;
-  if (type === 'sl') inputs.slPct.value = (((entry - price) / entry) * 100).toFixed(2);
-  else inputs[type + 'Pct'].value = (((price - entry) / entry) * 100).toFixed(2);
-  calcSizing();
-}
-
-function syncAllFromEntry() { calcPriceFromPct('sl'); calcPriceFromPct('tp1'); calcPriceFromPct('tp2'); }
-
-inputs.slPct.addEventListener('input', () => calcPriceFromPct('sl'));
-inputs.tp1Pct.addEventListener('input', () => calcPriceFromPct('tp1'));
-inputs.tp2Pct.addEventListener('input', () => calcPriceFromPct('tp2'));
-inputs.sl.addEventListener('input', () => calcPctFromPrice('sl'));
-inputs.tp1.addEventListener('input', () => calcPctFromPrice('tp1'));
-inputs.tp2.addEventListener('input', () => calcPctFromPrice('tp2'));
-inputs.entry.addEventListener('input', syncAllFromEntry);
-
-function calcSizing() {
-  const entry = parseFloat(inputs.entry.value) || 0;
-  const sl = parseFloat(inputs.sl.value) || 0;
-  const tp2 = parseFloat(inputs.tp2.value) || 0;
-
-  if (!entry || !sl || sl >= entry) return;
-
-  const maxLoss = activeCapital * (RISK_PCT / 100);
-  const maxPosValue = activeCapital * MAX_CAP_PCT;
-  
-  const diff = entry - sl;
-  const slPct = (diff / entry) * 100;
-  const rawShares = maxLoss / diff;
-  const lots = Math.floor(rawShares / 100) * 100;
-  const posVal = lots * entry;
-  const cappedLots = Math.floor(Math.min(posVal, maxPosValue) / entry / 100) * 100;
-  const finalPosVal = cappedLots * entry;
-
-  let rr = '—';
-  if (tp2 > entry && sl < entry) {
-    rr = ((tp2 - entry) / diff).toFixed(2) + ':1';
-  }
-
-  document.getElementById('rMaxLoss').textContent = fmtRp(cappedLots * diff);
-  document.getElementById('rShares').textContent = fmt(cappedLots);
-  document.getElementById('rPosVal').textContent = fmtRp(finalPosVal);
-  document.getElementById('rRR').textContent = rr;
-
-  const alertEl = document.getElementById('calcAlert');
-  alertEl.style.display = 'block';
-  if (slPct < 2.5) {
-    alertEl.style.background = 'var(--gold-bg)'; alertEl.style.color = 'var(--gold)';
-    alertEl.innerHTML = `⚠ SL terlalu ketat (${slPct.toFixed(1)}%). Widen SL or accept noise risk.`;
-  } else if (posVal > maxPosValue) {
-    alertEl.style.background = 'var(--red-bg)'; alertEl.style.color = 'var(--red)';
-    alertEl.innerHTML = `🚫 Max Cap (25%) Hit. Capped to ${fmt(cappedLots)} lots.`;
-  } else {
-    alertEl.style.background = 'var(--green-bg)'; alertEl.style.color = 'var(--green)';
-    alertEl.innerHTML = `✓ System compliant. Risk verified at ${fmtRp(cappedLots * diff)}.`;
-  }
-}
-
-// ── 30-TRADE CHALLENGE ──
-function renderChallenge() {
-  const g = document.getElementById('challengeGrid');
-  g.innerHTML = '';
-  challengeData.forEach((s, i) => {
-    const d = document.createElement('div');
-    d.className = 'trade-dot' + (s===1 ? ' win' : s===2 ? ' loss' : s===3 ? ' violation' : '');
-    d.textContent = i + 1;
-    d.onclick = () => {
-      challengeData[i] = (s + 1) % 4;
-      localStorage.setItem('buffon_challenge_v3', JSON.stringify(challengeData));
-      renderChallenge();
-      calculateCapitalTier(); // Recalculate tier instantly
-    };
-    g.appendChild(d);
-  });
-}
-
-// ── DRAWDOWN MONITOR ──
-function updateDrawdownMonitor() {
-  // Simplified logic assuming all 'positions' are today for daily, but in reality you'd filter by timestamp.
-  // For this local prototype, we will aggregate all as "Total P&L" just to demonstrate UI reactivity.
-  const totalPnl = positions.reduce((acc, p) => acc + (p.pnl || 0), 0);
-  
-  const dailyL = activeCapital * 0.02;
-  const weeklyL = activeCapital * 0.03;
-  const monthlyL = activeCapital * 0.07;
-
-  document.getElementById('limitDailyDisp').textContent = "-Rp " + fmt(dailyL);
-  document.getElementById('limitWeeklyDisp').textContent = "-Rp " + fmt(weeklyL);
-  document.getElementById('limitMonthlyDisp').textContent = "-Rp " + fmt(monthlyL);
-
-  const displayPnl = (elId, val, limit, barId, actId, stopTxt) => {
-    const el = document.getElementById(elId);
-    el.textContent = (val > 0 ? "+" : "") + fmtRp(val);
-    el.style.color = val > 0 ? "var(--green)" : val < 0 ? "var(--red)" : "var(--text-main)";
-    
-    const loss = Math.max(0, -val);
-    const pct = Math.min((loss / limit) * 100, 100);
-    document.getElementById(barId).style.width = pct + "%";
-    document.getElementById(barId).style.background = pct > 80 ? "var(--red)" : pct > 50 ? "var(--gold)" : "var(--green)";
-    
-    if(pct >= 100) {
-        document.getElementById(actId).textContent = "CRITICAL: " + stopTxt;
-        document.getElementById(actId).style.color = "var(--red)";
-        document.getElementById(actId).style.fontWeight = "600";
-    }
-  };
-
-  displayPnl('pnlDailyDisp', totalPnl, dailyL, 'barDaily', 'actDailyDisp', "LIMIT HIT. Close Stockbit immediately.");
-  displayPnl('pnlWeeklyDisp', totalPnl, weeklyL, 'barWeekly', 'actWeeklyDisp', "LIMIT HIT. Next week scales down.");
-  displayPnl('pnlMonthlyDisp', totalPnl, monthlyL, 'barMonthly', 'actMonthlyDisp', "LIMIT HIT. 5-Day Pause Mandated.");
-}
-
-// INIT
-renderChallenge();
-</script>
-</body>
-</html>
