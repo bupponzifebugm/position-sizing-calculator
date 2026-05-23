@@ -9,7 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* Claude Color Palette */
     --bg: #f7f5f2;
     --surface: #ffffff;
     --surface-hover: #fcfbf9;
@@ -45,6 +44,16 @@
   .logo span { color: var(--accent); }
   .title-block h1 { font-family: var(--font-serif); font-size: 32px; font-weight: 600; color: var(--text-main); }
   .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 9999px; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; background: var(--red-bg); color: var(--red); border: 1px solid rgba(184,75,75,0.2); }
+
+  /* TABS */
+  .tab-nav { display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; overflow-x: auto; scrollbar-width: none;}
+  .tab-nav::-webkit-scrollbar { display: none; }
+  .tab-btn { padding: 10px 20px; border-radius: 9999px; background: transparent; border: 1px solid transparent; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+  .tab-btn:hover { background: var(--surface); border-color: var(--border-dark); }
+  .tab-btn.active { background: var(--text-main); color: var(--surface); border-color: var(--text-main); }
+  .tab-content { display: none; animation: fadeIn 0.3s ease; }
+  .tab-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
   /* CARDS & LAYOUT */
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -94,6 +103,10 @@
   .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; font-size: 13px; color: var(--text-muted); }
   .step-n { width: 24px; height: 24px; border-radius: 12px; background: var(--border-dark); color: var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
   .step b { color: var(--text-main); font-weight: 600; }
+  ul.system-list { list-style: none; margin-left: 0; font-size: 13px; color: var(--text-muted); }
+  ul.system-list li { margin-bottom: 12px; display: flex; gap: 8px; }
+  ul.system-list li::before { content: '•'; color: var(--accent); font-weight: bold; }
+  ul.system-list b { color: var(--text-main); }
 
   /* CHALLENGE TRACKER */
   .challenge-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
@@ -123,11 +136,27 @@
   .positions-table th { text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
   .positions-table td { padding: 16px; border-bottom: 1px solid var(--border); color: var(--text-main); vertical-align: middle; }
   .positions-table tr:hover td { background: var(--surface-hover); }
+  .system-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .system-table th { text-align: left; padding: 12px; background: var(--bg); font-weight: 600; color: var(--text-main); border: 1px solid var(--border); }
+  .system-table td { padding: 12px; border: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+  .system-table td b { color: var(--text-main); }
   .ticker-badge { font-weight: 600; color: var(--text-main); }
   .status-pill { display: inline-flex; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
   .st-open { background: var(--green-bg); color: var(--green); } .st-tp1 { background: var(--purple-bg); color: var(--purple); }
   .st-closed { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border-dark); } .st-sl { background: var(--red-bg); color: var(--red); }
   .empty-state { text-align: center; padding: 48px 24px; color: var(--text-muted); font-size: 14px; border: 1px dashed var(--border-dark); border-radius: 12px; }
+
+  /* JOURNAL (NOTION-STYLE) */
+  .journal-toolbar { display: flex; gap: 8px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center; position: sticky; top: 0; background: var(--surface); z-index: 10; }
+  .journal-toolbar button, .journal-toolbar label { padding: 6px 12px; font-size: 13px; font-weight: 600; background: var(--surface-hover); border: 1px solid var(--border-dark); border-radius: 6px; cursor: pointer; color: var(--text-main); transition: all 0.2s; }
+  .journal-toolbar button:hover, .journal-toolbar label:hover { background: var(--bg); border-color: var(--accent); color: var(--accent); }
+  .journal-editor { min-height: 60vh; outline: none; padding: 8px 0; font-size: 15px; line-height: 1.7; color: var(--text-main); font-family: var(--font-sans); }
+  .journal-editor:empty:before { content: attr(placeholder); color: var(--text-muted); pointer-events: none; display: block; font-style: italic; }
+  .journal-editor h1 { font-size: 28px; margin: 24px 0 12px 0; font-family: var(--font-serif); font-weight: 600; }
+  .journal-editor h2 { font-size: 20px; margin: 20px 0 10px 0; font-weight: 600; }
+  .journal-editor img { max-width: 100%; border-radius: 8px; margin: 16px 0; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+  .journal-editor ul { margin-left: 24px; margin-bottom: 16px; }
+  .journal-editor li { margin-bottom: 6px; }
 
   /* MODALS */
   .modal-overlay { position: fixed; inset: 0; background: rgba(45, 43, 42, 0.85); backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: center; justify-content: center; }
@@ -182,157 +211,265 @@
     </div>
   </header>
 
-  <div class="dd-slider-container">
-    <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; margin-bottom:12px; letter-spacing:0.05em;">Live Drawdown Monitor (Scroll/Swipe)</div>
-    <div class="dd-slider">
-      
-      <div class="dd-card">
-        <div class="dd-header"><span>Daily P&L Limit (2%)</span><span class="dd-limit" id="limitDailyDisp">-Rp 200.000</span></div>
-        <div class="dd-pnl" id="pnlDailyDisp">Rp 0</div>
-        <div class="progress-bg"><div class="progress-fill" id="barDaily" style="width:0%"></div></div>
-        <div class="dd-action" id="actDailyDisp">Action: Close platform if hit.</div>
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('tab-execute')">Execution Engine</button>
+    <button class="tab-btn" onclick="switchTab('tab-risk')">Risk & Drawdown</button>
+    <button class="tab-btn" onclick="switchTab('tab-system')">Trading System</button>
+    <button class="tab-btn" onclick="switchTab('tab-journal')">Journal / Notes</button>
+  </div>
+
+  <div id="tab-execute" class="tab-content active">
+    <div class="dd-slider-container">
+      <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; margin-bottom:12px; letter-spacing:0.05em;">Live Drawdown Monitor (Scroll/Swipe)</div>
+      <div class="dd-slider">
+        <div class="dd-card">
+          <div class="dd-header"><span>Daily P&L Limit (2%)</span><span class="dd-limit" id="limitDailyDisp">-Rp 200.000</span></div>
+          <div class="dd-pnl" id="pnlDailyDisp">Rp 0</div>
+          <div class="progress-bg"><div class="progress-fill" id="barDaily" style="width:0%"></div></div>
+          <div class="dd-action" id="actDailyDisp">Action: Close platform if hit.</div>
+        </div>
+        <div class="dd-card">
+          <div class="dd-header"><span>Weekly Drawdown (3%)</span><span class="dd-limit" id="limitWeeklyDisp">-Rp 300.000</span></div>
+          <div class="dd-pnl" id="pnlWeeklyDisp">Rp 0</div>
+          <div class="progress-bg"><div class="progress-fill" id="barWeekly" style="width:0%"></div></div>
+          <div class="dd-action" id="actWeeklyDisp">Action: Revert to 10M tier next week if hit.</div>
+        </div>
+        <div class="dd-card">
+          <div class="dd-header"><span>Monthly Drawdown (7%)</span><span class="dd-limit" id="limitMonthlyDisp">-Rp 700.000</span></div>
+          <div class="dd-pnl" id="pnlMonthlyDisp">Rp 0</div>
+          <div class="progress-bg"><div class="progress-fill" id="barMonthly" style="width:0%"></div></div>
+          <div class="dd-action" id="actMonthlyDisp">Action: 5-Day Mandatory Pause & Audit if hit.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card strip">
+      <div class="strip-item">
+        <div class="strip-label">Active Capital Tier</div>
+        <div class="strip-val val-accent" id="activeCapDisp">Rp 10.000.000</div>
+        <div class="strip-sub" id="streakSubDisp">0 clean trades streak</div>
+      </div>
+      <div class="strip-item">
+        <div class="strip-label">Risk Per Trade (0.5%)</div>
+        <div class="strip-val val-red" id="maxLossDisp">Rp 50.000</div>
+        <div class="strip-sub">Hard Stop Cap</div>
+      </div>
+      <div class="strip-item">
+        <div class="strip-label">Max Position (25%)</div>
+        <div class="strip-val" id="posCapDisp">Rp 2.500.000</div>
+        <div class="strip-sub">Maximum Exposure</div>
+      </div>
+      <div class="strip-item" style="flex:1.5; min-width:200px;">
+        <div class="strip-label">Next Capital Upgrade</div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px;">
+          <span id="nextTierLabel">Rp 15M Unlock</span>
+          <span id="streakCountDisp">0/10</span>
+        </div>
+        <div class="progress-bg" style="margin-top:0"><div class="progress-fill" id="upgradeBar" style="width:0%; background:var(--accent)"></div></div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Position Sizing Calculator</div>
+
+        <div class="field">
+          <label>Ticker</label>
+          <input type="text" id="ticker" placeholder="BREN" maxlength="6" style="text-transform:uppercase;" />
+        </div>
+
+        <div class="field">
+          <label>Harga Entry (Rp)</label>
+          <input type="number" id="entry" value="0" step="1" />
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Stop Loss (SL)</label>
+            <div class="input-group">
+              <input type="number" id="slPct" placeholder="%" step="0.5" value="5" />
+              <input type="number" id="sl" placeholder="Rp" step="1" value="0" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Target 1 (TP1)</label>
+            <div class="input-group">
+              <input type="number" id="tp1Pct" placeholder="%" step="0.5" value="7.5" />
+              <input type="number" id="tp1" placeholder="Rp" step="1" value="0" />
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Target 2 (TP2)</label>
+          <div class="input-group">
+            <input type="number" id="tp2Pct" placeholder="%" step="0.5" value="18" />
+            <input type="number" id="tp2" placeholder="Rp" step="1" value="0" />
+          </div>
+        </div>
+
+        <div class="result-grid">
+          <div class="result-box danger">
+            <div class="result-label">Max Rugi</div>
+            <div class="result-val" id="rMaxLoss">—</div>
+            <div class="result-sub">0.5% Modal</div>
+          </div>
+          <div class="result-box success">
+            <div class="result-label">Jumlah Saham</div>
+            <div class="result-val" id="rShares">—</div>
+            <div class="result-sub">Lot (dibulatkan)</div>
+          </div>
+          <div class="result-box">
+            <div class="result-label">Nilai Posisi</div>
+            <div class="result-val" id="rPosVal">—</div>
+            <div class="result-sub" id="rPosValPct">Cap: 25%</div>
+          </div>
+          <div class="result-box">
+            <div class="result-label">R:R Ratio</div>
+            <div class="result-val" id="rRR">—</div>
+            <div class="result-sub">Reward vs Risk</div>
+          </div>
+        </div>
+
+        <div id="calcAlert" style="margin-top:16px; padding:12px; border-radius:8px; display:none; font-size:13px; font-weight:500;"></div>
+        <button class="btn" onclick="openAddModal()">+ Log Position to Tracker</button>
       </div>
 
-      <div class="dd-card">
-        <div class="dd-header"><span>Weekly Drawdown (3%)</span><span class="dd-limit" id="limitWeeklyDisp">-Rp 300.000</span></div>
-        <div class="dd-pnl" id="pnlWeeklyDisp">Rp 0</div>
-        <div class="progress-bg"><div class="progress-fill" id="barWeekly" style="width:0%"></div></div>
-        <div class="dd-action" id="actWeeklyDisp">Action: Revert to 10M tier next week if hit.</div>
-      </div>
+      <div>
+        <div class="card">
+          <div class="card-title">TP Protocol & Runner Math</div>
+          <div>
+            <div class="step"><div class="step-n" style="background:var(--green-bg); color:var(--green)">T1</div><span>TP1 (<b id="tp1disp">—</b>): Jual 40% = <b id="tp1shares">—</b> lot. Pindah SL ke Entry (Breakeven).</span></div>
+            <div class="step"><div class="step-n" style="background:var(--accent-bg); color:var(--accent)">T2</div><span>TP2 (<b id="tp2disp">—</b>): Jual 40% = <b id="tp2shares">—</b> lot. Profit total terkunci: <b id="tp2profit">—</b></span></div>
+            <div class="step" style="margin-bottom:0;"><div class="step-n" style="background:var(--purple-bg); color:var(--purple)">RN</div><span>Runner 20% = <b id="runnerShares">—</b> lot. Trail stop, biarkan jalan sampai trend patah.</span></div>
+          </div>
+        </div>
 
-      <div class="dd-card">
-        <div class="dd-header"><span>Monthly Drawdown (7%)</span><span class="dd-limit" id="limitMonthlyDisp">-Rp 700.000</span></div>
-        <div class="dd-pnl" id="pnlMonthlyDisp">Rp 0</div>
-        <div class="progress-bg"><div class="progress-fill" id="barMonthly" style="width:0%"></div></div>
-        <div class="dd-action" id="actMonthlyDisp">Action: 5-Day Mandatory Pause & Audit if hit.</div>
+        <div class="card">
+          <div class="card-title">30-Trade Challenge Tracker</div>
+          <div style="font-size:12px; color:var(--text-muted); line-height:1.4;">
+            Violation <span style="color:var(--gold); font-weight:600">(Gold)</span> resets your clean streak to zero. Capital scaling relies strictly on this counter. Click dots to change status.
+          </div>
+          <div class="challenge-grid" id="challengeGrid"></div>
+          <div class="challenge-legend">
+            <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div> Win</div>
+            <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div> Loss (Clean)</div>
+            <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div> Violation</div>
+          </div>
+        </div>
       </div>
-
     </div>
   </div>
 
-  <div class="card strip">
-    <div class="strip-item">
-      <div class="strip-label">Active Capital Tier</div>
-      <div class="strip-val val-accent" id="activeCapDisp">Rp 10.000.000</div>
-      <div class="strip-sub" id="streakSubDisp">0 clean trades streak</div>
-    </div>
-    <div class="strip-item">
-      <div class="strip-label">Risk Per Trade (0.5%)</div>
-      <div class="strip-val val-red" id="maxLossDisp">Rp 50.000</div>
-      <div class="strip-sub">Hard Stop Cap</div>
-    </div>
-    <div class="strip-item">
-      <div class="strip-label">Max Position (25%)</div>
-      <div class="strip-val" id="posCapDisp">Rp 2.500.000</div>
-      <div class="strip-sub">Maximum Exposure</div>
-    </div>
-    <div class="strip-item" style="flex:1.5; min-width:200px;">
-      <div class="strip-label">Next Capital Upgrade</div>
-      <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px;">
-        <span id="nextTierLabel">Rp 15M Unlock</span>
-        <span id="streakCountDisp">0/10</span>
+  <div id="tab-risk" class="tab-content">
+    <div class="card" style="margin-top:0;">
+      <div class="table-header">
+        <h2 style="font-size:16px; font-family:var(--font-serif); font-weight:600;">Trade Log & Active Positions</h2>
+        <button class="btn-small" onclick="clearPositions()">Clear History</button>
       </div>
-      <div class="progress-bg" style="margin-top:0"><div class="progress-fill" id="upgradeBar" style="width:0%; background:var(--accent)"></div></div>
+      <div id="positionsContainer"></div>
     </div>
   </div>
 
-  <div class="grid-2">
+  <div id="tab-system" class="tab-content">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">1. Bot Verification & Priority Stack</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Algo Trade bot picks are the FIRST filter. Read in this exact order. Any INSTANT FAIL = Skip immediately.</div>
+        <ul class="system-list">
+          <li><span><b>Bot Score:</b> Must be ≥ 80. Below 75 is an instant fail. Do not rationalize a 74.</span></li>
+          <li><span><b>Stage:</b> Must be EARLY_SETUP or EARLY_CONFIRM. Extended = skip.</span></li>
+          <li><span><b style="color:var(--red)">Asing (Foreign):</b> Must be BUYING or Neutral. SELLING = INSTANT SKIP. Always.</span></li>
+          <li><span><b>Bandar Net:</b> Must be > +0.1% of market cap. Negative = no conviction.</span></li>
+          <li><span><b>Top 3 Buyers:</b> Look for AK, CC, XL, OD, MU. (MG dominant alone = goreng warning).</span></li>
+          <li><span><b>YP Position:</b> YP must NOT be in the top 3 buyers (retail driven = late signal).</span></li>
+          <li><span><b>Volume:</b> Must be ≥ 1.5x above 5-day average.</span></li>
+          <li><span><b>2-Day Confirmation:</b> Must see 2 consecutive days of accumulation before entry (exception: Score 90+).</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title">2. Execution & TP Protocol</div>
+        <ul class="system-list">
+          <li><span><b>Morning Routine:</b> Wake 08:00. Check USD/IDR at 08:30. Determine Risk %. Assess Wall Street/News. Focus < 7 = No Trade.</span></li>
+          <li><span><b>Entry:</b> Enter ONLY if price enters pre-marked zone. No chasing ever.</span></li>
+          <li><span><b>Stop Loss:</b> Placed IMMEDIATELY after order fill. Never move SL further from entry. Never average down.</span></li>
+          <li><span><b>Take Profit 1:</b> At +7.5% hit, sell exactly 40%. IMMEDIATELY move SL to breakeven. (Trade is now free).</span></li>
+          <li><span><b>Take Profit 2:</b> At +18% hit, sell 40%. (Locks in 2:1 R:R target).</span></li>
+          <li><span><b>Runner:</b> Trail the remaining 20% below each higher swing low. Exit on breakdown.</span></li>
+          <li><span><b>Hard Close:</b> ALL positions flat at 09:30 on class days, 11:00 on free days.</span></li>
+        </ul>
+      </div>
+    </div>
+
     <div class="card">
-      <div class="card-title">Position Sizing Calculator</div>
-
-      <div class="field">
-        <label>Ticker</label>
-        <input type="text" id="ticker" placeholder="BREN" maxlength="6" style="text-transform:uppercase;" />
-      </div>
-
-      <div class="field">
-        <label>Harga Entry (Rp)</label>
-        <input type="number" id="entry" value="0" step="1" />
-      </div>
-
-      <div class="field-row">
-        <div class="field">
-          <label>Stop Loss (SL)</label>
-          <div class="input-group">
-            <input type="number" id="slPct" placeholder="%" step="0.5" value="5" />
-            <input type="number" id="sl" placeholder="Rp" step="1" value="0" />
-          </div>
-        </div>
-        <div class="field">
-          <label>Target 1 (TP1)</label>
-          <div class="input-group">
-            <input type="number" id="tp1Pct" placeholder="%" step="0.5" value="7.5" />
-            <input type="number" id="tp1" placeholder="Rp" step="1" value="0" />
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Target 2 (TP2)</label>
-        <div class="input-group">
-          <input type="number" id="tp2Pct" placeholder="%" step="0.5" value="18" />
-          <input type="number" id="tp2" placeholder="Rp" step="1" value="0" />
-        </div>
-      </div>
-
-      <div class="result-grid">
-        <div class="result-box danger">
-          <div class="result-label">Max Rugi</div>
-          <div class="result-val" id="rMaxLoss">—</div>
-          <div class="result-sub">0.5% Modal</div>
-        </div>
-        <div class="result-box success">
-          <div class="result-label">Jumlah Saham</div>
-          <div class="result-val" id="rShares">—</div>
-          <div class="result-sub">Lot (dibulatkan)</div>
-        </div>
-        <div class="result-box">
-          <div class="result-label">Nilai Posisi</div>
-          <div class="result-val" id="rPosVal">—</div>
-          <div class="result-sub" id="rPosValPct">Cap: 25%</div>
-        </div>
-        <div class="result-box">
-          <div class="result-label">R:R Ratio</div>
-          <div class="result-val" id="rRR">—</div>
-          <div class="result-sub">Reward vs Risk</div>
-        </div>
-      </div>
-
-      <div id="calcAlert" style="margin-top:16px; padding:12px; border-radius:8px; display:none; font-size:13px; font-weight:500;"></div>
-      <button class="btn" onclick="openAddModal()">+ Log Position to Tracker</button>
-    </div>
-
-    <div>
-      <div class="card">
-        <div class="card-title">TP Protocol & Runner Math</div>
-        <div>
-          <div class="step"><div class="step-n" style="background:var(--green-bg); color:var(--green)">T1</div><span>TP1 (<b id="tp1disp">—</b>): Jual 40% = <b id="tp1shares">—</b> lot. Pindah SL ke Entry (Breakeven).</span></div>
-          <div class="step"><div class="step-n" style="background:var(--accent-bg); color:var(--accent)">T2</div><span>TP2 (<b id="tp2disp">—</b>): Jual 40% = <b id="tp2shares">—</b> lot. Profit total terkunci: <b id="tp2profit">—</b></span></div>
-          <div class="step" style="margin-bottom:0;"><div class="step-n" style="background:var(--purple-bg); color:var(--purple)">RN</div><span>Runner 20% = <b id="runnerShares">—</b> lot. Trail stop, biarkan jalan sampai trend patah.</span></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">30-Trade Challenge Tracker</div>
-        <div style="font-size:12px; color:var(--text-muted); line-height:1.4;">
-          Violation <span style="color:var(--gold); font-weight:600">(Gold)</span> resets your clean streak to zero. Capital scaling relies strictly on this counter. Click dots to change status.
-        </div>
-        <div class="challenge-grid" id="challengeGrid"></div>
-        <div class="challenge-legend">
-          <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div> Win</div>
-          <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div> Loss (Clean)</div>
-          <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div> Violation</div>
-        </div>
+      <div class="card-title">3. Sector Rotation Playbook</div>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Use these patterns to identify early institutional accumulation before retail FOMO.</div>
+      <div style="overflow-x:auto;">
+        <table class="system-table">
+          <thead>
+            <tr>
+              <th>Rotation Type</th>
+              <th>How to Identify Early</th>
+              <th>Entry Window</th>
+              <th>Exit Signal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Conglomerate Chain</b></td>
+              <td>First group (e.g. BNBR) pumps with AK/CC accumulation.</td>
+              <td>Identify the <b>next group</b> in the chain before it pumps.</td>
+              <td>YP becomes dominant in the next group = distribution starting.</td>
+            </tr>
+            <tr>
+              <td><b>MBG Beneficiary</b></td>
+              <td>Govt contract news or disbursement announcements.</td>
+              <td>Food/Logistics stocks on the day of or day after news.</td>
+              <td>Contract priced in; volume drops back to average.</td>
+            </tr>
+            <tr>
+              <td><b>Commodity Spike</b></td>
+              <td>Oil/CPO/Coal global price move >3% overnight.</td>
+              <td>MEDC, ADRO, BUMI type on open.</td>
+              <td>Commodity price reverses or profit-taking volume spikes.</td>
+            </tr>
+            <tr>
+              <td><b>Defensive Rotation</b></td>
+              <td>IHSG red 3+ days, high fear sentiment.</td>
+              <td>TLKM, Consumer staples on dip.</td>
+              <td>IHSG stabilizes, risk-on returns, sector rotates out.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 
-  <div class="card" style="margin-top:0;">
-    <div class="table-header">
-      <h2 style="font-size:16px; font-family:var(--font-serif); font-weight:600;">Trade Log & Active Positions</h2>
-      <button class="btn-small" onclick="clearPositions()">Clear History</button>
+  <div id="tab-journal" class="tab-content">
+    <div class="card" style="min-height: 70vh;">
+      <div class="card-title">Trading Journal & Reflections</div>
+      
+      <div class="journal-toolbar">
+        <button onclick="formatDoc('formatBlock', 'H1')">Title (H1)</button>
+        <button onclick="formatDoc('formatBlock', 'H2')">Header (H2)</button>
+        <button onclick="formatDoc('bold')"><b>B</b></button>
+        <button onclick="formatDoc('italic')"><i>I</i></button>
+        <button onclick="formatDoc('insertUnorderedList')">Bullet List</button>
+        
+        <label>
+          📷 Add Image
+          <input type="file" accept="image/*" style="display:none;" onchange="insertImage(event)">
+        </label>
+        
+        <div style="flex:1"></div>
+        <button onclick="saveJournal()" style="border-color:var(--green); color:var(--green); background:var(--green-bg);">Save Notes</button>
+      </div>
+
+      <div id="journalEditor" contenteditable="true" class="journal-editor" placeholder="Start typing your thesis, daily reflections, or paste images here..."></div>
+      <div id="journalSaveStatus" style="font-size:12px; color:var(--green); margin-top:12px; text-align:right; font-weight:600; display:none;">✓ Journal saved to local storage.</div>
+      <div id="journalErrorStatus" style="font-size:12px; color:var(--red); margin-top:12px; text-align:right; font-weight:600; display:none;">🚫 Storage Limit Exceeded! Images might be too large.</div>
     </div>
-    <div id="positionsContainer"></div>
   </div>
 
 </div>
@@ -377,7 +514,6 @@
 
 <script>
 // ── STATE VARIABLES ──
-// Changed local storage key to v4 to ensure completely fresh start
 let positions = JSON.parse(localStorage.getItem('buffon_pos_v4') || '[]');
 let challengeData = JSON.parse(localStorage.getItem('buffon_challenge_v4') || 'null') || new Array(30).fill(0);
 
@@ -390,6 +526,61 @@ const MAX_CAP_PCT = 0.25;
 function fmt(n) { return Math.round(n).toLocaleString('id-ID'); }
 function fmtRp(n) { return 'Rp ' + fmt(n); }
 function fmtPct(n) { return n.toFixed(1) + '%'; }
+
+// ── TAB SWITCHING ──
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── JOURNAL / NOTION LOGIC ──
+function formatDoc(cmd, value=null) {
+  document.execCommand(cmd, false, value);
+  document.getElementById('journalEditor').focus();
+}
+
+function insertImage(e) {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    formatDoc('insertImage', event.target.result);
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveJournal() {
+  const content = document.getElementById('journalEditor').innerHTML;
+  const successMsg = document.getElementById('journalSaveStatus');
+  const errorMsg = document.getElementById('journalErrorStatus');
+  
+  try {
+    localStorage.setItem('buffon_journal_v4', content);
+    successMsg.style.display = 'block';
+    errorMsg.style.display = 'none';
+    setTimeout(() => successMsg.style.display = 'none', 3000);
+  } catch(e) {
+    // If local storage is full (usually because images are too large / exceed 5MB limit)
+    errorMsg.style.display = 'block';
+    successMsg.style.display = 'none';
+    console.error("Storage Error:", e);
+  }
+}
+
+// Load Journal on startup
+document.getElementById('journalEditor').innerHTML = localStorage.getItem('buffon_journal_v4') || '';
+
+// Auto-save journal every 10 seconds if typing
+setInterval(() => {
+  const currentContent = document.getElementById('journalEditor').innerHTML;
+  const savedContent = localStorage.getItem('buffon_journal_v4');
+  if (currentContent !== savedContent && currentContent.trim() !== '') {
+    try { localStorage.setItem('buffon_journal_v4', currentContent); } catch(e) {}
+  }
+}, 10000);
+
 
 // ── MORNING GATE LOGIC ──
 function unlockPlatform() {
@@ -453,7 +644,7 @@ function calculateCapitalTier() {
   
   // Run dependent functions
   updateDrawdownMonitor();
-  calcSizing(); // Recalculate sizing just in case capital changed
+  calcSizing(); 
 }
 
 // ── SYNC & SIZING CALCULATOR ──
@@ -464,7 +655,6 @@ const inputs = {
   tp2: document.getElementById('tp2'), tp2Pct: document.getElementById('tp2Pct')
 };
 
-// Auto-calculate Price from Percentage
 function calcPriceFromPct(type) {
   const entry = parseFloat(inputs.entry.value) || 0;
   if (!entry) return;
@@ -474,7 +664,6 @@ function calcPriceFromPct(type) {
   calcSizing();
 }
 
-// Auto-calculate Percentage from Price
 function calcPctFromPrice(type) {
   const entry = parseFloat(inputs.entry.value) || 0;
   if (!entry) return;
@@ -485,14 +674,12 @@ function calcPctFromPrice(type) {
   calcSizing();
 }
 
-// If Entry changes, maintain percentages and update prices
 function syncAllFromEntry() { 
     calcPriceFromPct('sl'); 
     calcPriceFromPct('tp1'); 
     calcPriceFromPct('tp2'); 
 }
 
-// Attach listeners
 inputs.slPct.addEventListener('input', () => calcPriceFromPct('sl'));
 inputs.tp1Pct.addEventListener('input', () => calcPriceFromPct('tp1'));
 inputs.tp2Pct.addEventListener('input', () => calcPriceFromPct('tp2'));
@@ -501,7 +688,6 @@ inputs.tp1.addEventListener('input', () => calcPctFromPrice('tp1'));
 inputs.tp2.addEventListener('input', () => calcPctFromPrice('tp2'));
 inputs.entry.addEventListener('input', syncAllFromEntry);
 
-// Main Core Math
 function calcSizing() {
   const entry = parseFloat(inputs.entry.value) || 0;
   const sl = parseFloat(inputs.sl.value) || 0;
@@ -516,7 +702,6 @@ function calcSizing() {
   const diff = entry - sl;
   const slPct = (diff / entry) * 100;
   
-  // Lot calculation (round down)
   const rawShares = maxLoss / diff;
   const posValUncapped = Math.floor(rawShares / 100) * 100 * entry;
   const cappedLots = Math.floor(Math.min(posValUncapped, maxPosValue) / entry / 100) * 100;
@@ -527,15 +712,13 @@ function calcSizing() {
     rr = ((tp2 - entry) / diff).toFixed(2) + ':1';
   }
 
-  // Update Core UI
   document.getElementById('rMaxLoss').textContent = fmtRp(cappedLots * diff);
   document.getElementById('rShares').textContent = fmt(cappedLots);
   document.getElementById('rPosVal').textContent = fmtRp(finalPosVal);
   document.getElementById('rPosValPct').textContent = fmtPct((finalPosVal/activeCapital)*100) + ' Modal';
   document.getElementById('rRR').textContent = rr;
 
-  // Update TP Runner UI
-  const t1s = Math.floor(cappedLots * 0.40 / 100) * 100; // 40% exit
+  const t1s = Math.floor(cappedLots * 0.40 / 100) * 100; 
   document.getElementById('tp1disp').textContent = tp1 ? fmtRp(tp1) + ' (+' + fmtPct(((tp1-entry)/entry)*100) + ')' : '—';
   document.getElementById('tp1shares').textContent = fmt(t1s);
   document.getElementById('tp2disp').textContent = tp2 ? fmtRp(tp2) + ' (+' + fmtPct(((tp2-entry)/entry)*100) + ')' : '—';
@@ -543,7 +726,6 @@ function calcSizing() {
   document.getElementById('tp2profit').textContent = tp2 ? fmtRp((t1s*(tp1-entry)) + (t1s*(tp2-entry))) : '—';
   document.getElementById('runnerShares').textContent = fmt(cappedLots - (t1s * 2));
 
-  // Dynamic Warning Alerts
   const alertEl = document.getElementById('calcAlert');
   alertEl.style.display = 'block';
   if (slPct < 2.5) {
@@ -579,7 +761,6 @@ function openAddModal() {
 
 function closeModal() { document.getElementById('addModal').classList.remove('open'); }
 
-// Show/hide exit price depending on status
 document.getElementById('mStatus').addEventListener('change', (e) => {
   document.getElementById('exitPriceField').style.display = ['closed','sl'].includes(e.target.value) ? 'block' : 'none';
 });
@@ -597,7 +778,6 @@ function savePosition() {
   const status = document.getElementById('mStatus').value;
   const exitPrice = parseFloat(document.getElementById('mExit').value) || 0;
 
-  // Basic P&L estimation for the tracker table
   let pnl = 0;
   if (status === 'closed' && exitPrice) pnl = (exitPrice - entry) * lots * 100;
   else if (status === 'sl') pnl = (sl - entry) * lots * 100;
@@ -624,7 +804,6 @@ function clearPositions() {
   }
 }
 
-// Render Table
 function renderPositions() {
   const c = document.getElementById('positionsContainer');
   if (!positions.length) {
@@ -657,15 +836,12 @@ function renderPositions() {
   });
   c.innerHTML = html + `</tbody></table></div>`;
   
-  updateDrawdownMonitor(); // Re-sync drawdowns when table updates
+  updateDrawdownMonitor(); 
 }
 
 // ── DRAWDOWN MONITOR LOGIC ──
 function updateDrawdownMonitor() {
-  // Aggregate all logged P&L for demonstration/local tracking purposes
   const totalPnl = positions.reduce((acc, p) => acc + (p.pnl || 0), 0);
-  
-  // Calculate dynamic limits based on active capital tier
   const dailyL = activeCapital * 0.02;
   const weeklyL = activeCapital * 0.03;
   const monthlyL = activeCapital * 0.07;
@@ -679,7 +855,6 @@ function updateDrawdownMonitor() {
     el.textContent = (val > 0 ? "+" : "") + fmtRp(val);
     el.style.color = val > 0 ? "var(--green)" : val < 0 ? "var(--red)" : "var(--text-main)";
     
-    // Calculate Drawdown percentage (only if negative)
     const loss = Math.max(0, -val);
     const pct = Math.min((loss / limit) * 100, 100);
     
@@ -691,7 +866,6 @@ function updateDrawdownMonitor() {
         document.getElementById(actId).style.color = "var(--red)";
         document.getElementById(actId).style.fontWeight = "600";
     } else {
-        // Reset defaults if recovered/positive
         if(elId === 'pnlDailyDisp') document.getElementById(actId).textContent = "Action: Close platform if hit.";
         if(elId === 'pnlWeeklyDisp') document.getElementById(actId).textContent = "Action: Revert to 10M tier next week if hit.";
         if(elId === 'pnlMonthlyDisp') document.getElementById(actId).textContent = "Action: 5-Day Mandatory Pause & Audit if hit.";
@@ -714,7 +888,6 @@ function renderChallenge() {
     d.className = 'trade-dot' + (s===1 ? ' win' : s===2 ? ' loss' : s===3 ? ' violation' : '');
     d.textContent = i + 1;
     d.onclick = () => {
-      // Toggle states: Pending(0) -> Win(1) -> Loss(2) -> Violation(3) -> loop
       challengeData[i] = (s + 1) % 4;
       localStorage.setItem('buffon_challenge_v4', JSON.stringify(challengeData));
       renderChallenge();
@@ -724,7 +897,7 @@ function renderChallenge() {
   });
 }
 
-// Initialize Tracker Dots (Pre-Gate)
+// Initialize Tracker Dots
 renderChallenge();
 </script>
 </body>
