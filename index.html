@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
 <style>
   :root {
+    /* Claude Color Palette */
     --bg: #f7f5f2;
     --surface: #ffffff;
     --surface-hover: #fcfbf9;
@@ -18,7 +19,6 @@
     --text-muted: #6b6965;
     --accent: #da7756; 
     --accent-hover: #c66546;
-    --accent-bg: #f9edea;
     --green: #467a57;
     --green-bg: #eaf1ec;
     --red: #b84b4b;
@@ -31,12 +31,12 @@
     --font-serif: 'Playfair Display', serif;
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
-    --shadow-lg: 0 12px 32px rgba(0,0,0,0.1);
+    --shadow-lg: 0 20px 40px rgba(0,0,0,0.15);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text-main); font-family: var(--font-sans); line-height: 1.5; min-height: 100vh; overflow-x: hidden; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px 64px 24px; }
+  body { background: var(--bg); color: var(--text-main); font-family: var(--font-sans); line-height: 1.5; padding-bottom: 64px; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
 
   /* HEADER */
   header { padding: 40px 0 24px 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
@@ -44,41 +44,40 @@
   .logo { font-size: 12px; font-weight: 600; letter-spacing: 0.05em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
   .logo span { color: var(--accent); }
   .title-block h1 { font-family: var(--font-serif); font-size: 32px; font-weight: 600; color: var(--text-main); }
-  
-  .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; }
-  .survival { color: var(--red); background: var(--red-bg); border: 1px solid rgba(184,75,75,0.2); }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 9999px; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; background: var(--red-bg); color: var(--red); border: 1px solid rgba(184,75,75,0.2); }
 
-  /* TABS */
-  .tab-nav { display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
-  .tab-btn { padding: 10px 20px; border-radius: 9999px; background: transparent; border: 1px solid transparent; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; }
-  .tab-btn:hover { background: var(--surface); border-color: var(--border-dark); }
-  .tab-btn.active { background: var(--text-main); color: var(--surface); border-color: var(--text-main); }
-  .tab-content { display: none; animation: fadeIn 0.3s ease; }
-  .tab-content.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* CARDS & STRIPS */
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
-  .card-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
-  .card-title-line { display: flex; align-items: center; gap: 12px; flex: 1; }
-  .card-title-line::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-  
-  .strip { display: flex; align-items: flex-start; gap: 32px; flex-wrap: wrap; }
-  .strip-item { flex: 1; min-width: 140px; }
-  .strip-label { font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
-  .strip-val { font-size: 20px; font-weight: 600; color: var(--text-main); }
-  .strip-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-  .val-green { color: var(--green); } .val-red { color: var(--red); } .val-accent { color: var(--accent); }
-
+  /* CARDS & LAYOUT */
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
   @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+  .card-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+  .card-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* CAPITAL TIER STRIP */
+  .strip { display: flex; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
+  .strip-item { flex: 1; min-width: 140px; }
+  .strip-label { font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
+  .strip-val { font-size: 22px; font-weight: 600; color: var(--text-main); }
+  .strip-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .val-accent { color: var(--accent); } .val-red { color: var(--red); }
+
+  /* DRAWDOWN SLIDER */
+  .dd-slider-container { width: 100%; margin-bottom: 32px; }
+  .dd-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding-bottom: 12px; scrollbar-width: none; }
+  .dd-slider::-webkit-scrollbar { display: none; }
+  .dd-card { flex: 0 0 calc(33.333% - 11px); min-width: 280px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--shadow-sm); }
+  @media (max-width: 900px) { .dd-card { flex: 0 0 calc(50% - 8px); } }
+  @media (max-width: 600px) { .dd-card { flex: 0 0 100%; } }
+  .dd-header { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; font-weight: 600; }
+  .dd-limit { color: var(--red); }
+  .dd-pnl { font-size: 24px; font-weight: 600; margin-bottom: 12px; }
+  .dd-action { font-size: 11px; color: var(--text-muted); margin-top: 12px; font-weight: 500; }
 
   /* FORMS & INPUTS */
   .field { margin-bottom: 16px; }
   .field label { display: block; font-size: 13px; font-weight: 500; color: var(--text-main); margin-bottom: 8px; }
-  .field input, .field select { width: 100%; background: var(--surface); border: 1px solid var(--border-dark); border-radius: 8px; color: var(--text-main); font-family: var(--font-sans); font-size: 16px; padding: 12px 14px; outline: none; transition: all 0.2s ease; }
-  .field input:focus, .field select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(218, 119, 86, 0.15); }
+  .field input, .field select { width: 100%; background: var(--bg); border: 1px solid var(--border-dark); border-radius: 8px; color: var(--text-main); font-family: var(--font-sans); font-size: 16px; padding: 12px 14px; outline: none; transition: all 0.2s; }
+  .field input:focus, .field select:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(218, 119, 86, 0.15); }
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .input-group { display: flex; gap: 8px; }
   .input-group input:first-child { width: 80px; text-align: center; }
@@ -91,43 +90,60 @@
   .result-val { font-size: 18px; font-weight: 600; color: var(--text-main); }
   .result-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
-  /* BUTTONS */
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; background: var(--accent); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; width: 100%; margin-top: 24px; }
-  .btn:hover { background: var(--accent-hover); } .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-small { padding: 6px 12px; font-size: 12px; background: var(--surface); color: var(--text-main); border: 1px solid var(--border-dark); border-radius: 6px; width: auto; margin: 0; cursor:pointer;}
-  .btn-small:hover { border-color: var(--accent); color: var(--accent); }
+  /* STEPS */
+  .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; font-size: 13px; color: var(--text-muted); }
+  .step-n { width: 24px; height: 24px; border-radius: 12px; background: var(--border-dark); color: var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+  .step b { color: var(--text-main); font-weight: 600; }
 
-  /* PROGRESS & CHALLENGE */
-  .progress-bg { height: 8px; background: var(--border); border-radius: 4px; margin-top: 8px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--green); border-radius: 4px; transition: width 0.3s ease; }
-  
+  /* CHALLENGE TRACKER */
   .challenge-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
-  .trade-dot { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); user-select: none; }
-  .trade-dot.win { background: var(--green-bg); border-color: rgba(70,122,87,0.3); color: var(--green); }
-  .trade-dot.loss { background: var(--red-bg); border-color: rgba(184,75,75,0.3); color: var(--red); }
-  .trade-dot.violation { background: var(--gold-bg); border-color: rgba(176,125,53,0.3); color: var(--gold); }
+  .trade-dot { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--bg); color: var(--text-muted); user-select: none; transition: all 0.2s; }
+  .trade-dot.win { background: var(--green-bg); border-color: rgba(70,122,87,0.4); color: var(--green); }
+  .trade-dot.loss { background: var(--red-bg); border-color: rgba(184,75,75,0.4); color: var(--red); }
+  .trade-dot.violation { background: var(--gold-bg); border-color: rgba(176,125,53,0.4); color: var(--gold); }
+  .trade-dot:hover { border-color: var(--accent); color: var(--accent); }
+  .challenge-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 16px; font-size: 12px; color: var(--text-muted); }
+  .leg-item { display: flex; align-items: center; gap: 6px; } .leg-dot { width: 12px; height: 12px; border-radius: 3px; }
 
-  /* SLIDER */
-  .slider-viewport { overflow: hidden; width: 100%; position: relative; }
-  .slider-wrapper { display: flex; transition: transform 0.3s ease-in-out; }
-  .slider-slide { flex: 0 0 100%; min-width: 100%; padding-right: 2px; } /* padding for visual glitch */
-  .dd-card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+  /* PROGRESS BARS */
+  .progress-bg { height: 6px; background: var(--border); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width 0.3s ease; }
 
-  /* MORNING GATE MODAL */
-  .gate-overlay { position: fixed; inset: 0; background: rgba(45, 43, 42, 0.9); backdrop-filter: blur(8px); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-  .gate-modal { background: var(--surface); border-radius: 16px; padding: 40px; width: 100%; max-width: 480px; margin: 20px; box-shadow: var(--shadow-lg); }
-  .gate-modal h2 { font-family: var(--font-serif); font-size: 24px; margin-bottom: 8px; }
-  .gate-modal p { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
-  .gate-error { background: var(--red-bg); color: var(--red); padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 500; margin-top: 16px; display: none; }
+  /* BUTTONS */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; background: var(--accent); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; width: 100%; margin-top: 16px; }
+  .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+  .btn.secondary { background: var(--bg); color: var(--text-main); border: 1px solid var(--border-dark); }
+  .btn.secondary:hover { border-color: var(--text-main); }
+  .btn-small { padding: 6px 12px; font-size: 12px; background: transparent; color: var(--text-muted); border: 1px solid var(--border-dark); border-radius: 6px; cursor: pointer; }
+  .btn-small:hover { border-color: var(--red); color: var(--red); }
 
+  /* TABLES */
+  .table-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .positions-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .positions-table th { text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+  .positions-table td { padding: 16px; border-bottom: 1px solid var(--border); color: var(--text-main); vertical-align: middle; }
+  .positions-table tr:hover td { background: var(--surface-hover); }
+  .ticker-badge { font-weight: 600; color: var(--text-main); }
+  .status-pill { display: inline-flex; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
+  .st-open { background: var(--green-bg); color: var(--green); } .st-tp1 { background: var(--purple-bg); color: var(--purple); }
+  .st-closed { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border-dark); } .st-sl { background: var(--red-bg); color: var(--red); }
+  .empty-state { text-align: center; padding: 48px 24px; color: var(--text-muted); font-size: 14px; border: 1px dashed var(--border-dark); border-radius: 12px; }
+
+  /* MODALS */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(45, 43, 42, 0.85); backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border-radius: 16px; padding: 32px; width: 100%; max-width: 480px; margin: 20px; box-shadow: var(--shadow-lg); animation: slideUp 0.2s ease; max-height: 90vh; overflow-y: auto;}
+  @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+  .modal h3 { font-size: 20px; font-weight: 600; margin-bottom: 24px; font-family: var(--font-serif); }
+  #morningGate { z-index: 9999; }
 </style>
 </head>
 <body>
 
-<div class="gate-overlay" id="morningGate">
-  <div class="gate-modal">
-    <h2>Morning Gate Protocol</h2>
-    <p>Complete execution parameters before platform unlocks.</p>
+<div class="modal-overlay open" id="morningGate">
+  <div class="modal">
+    <h3>Morning Gate Protocol</h3>
+    <p style="font-size:14px; color:var(--text-muted); margin-bottom:24px;">Complete execution parameters before platform unlocks.</p>
     
     <div class="field">
       <label>Focus Score (1-10)</label>
@@ -148,8 +164,8 @@
       </select>
     </div>
 
-    <div class="gate-error" id="mgError"></div>
-    <button class="btn" id="mgUnlockBtn" onclick="unlockPlatform()">Unlock Platform</button>
+    <div id="mgError" style="background:var(--red-bg); color:var(--red); padding:12px; border-radius:8px; font-size:13px; font-weight:500; margin-top:16px; display:none;"></div>
+    <button class="btn" id="mgUnlockBtn" onclick="unlockPlatform()">Unlock Engine</button>
   </div>
 </div>
 
@@ -161,105 +177,555 @@
         <div class="title-block"><h1>Capital & Protocol System</h1></div>
       </div>
       <div class="badge survival">
-        <div class="dot"></div>
-        <span id="regimeText">SURVIVAL MODE (0.5%)</span>
+        <span>SURVIVAL MODE (0.5%)</span>
       </div>
     </div>
   </header>
 
-  <div class="tab-nav">
-    <button class="tab-btn active" onclick="switchTab('tab-execute')">Execution Engine</button>
-    <button class="tab-btn" onclick="switchTab('tab-risk')">Risk & Drawdown Monitor</button>
+  <div class="dd-slider-container">
+    <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; margin-bottom:12px; letter-spacing:0.05em;">Live Drawdown Monitor (Scroll/Swipe)</div>
+    <div class="dd-slider">
+      
+      <div class="dd-card">
+        <div class="dd-header"><span>Daily P&L Limit (2%)</span><span class="dd-limit" id="limitDailyDisp">-Rp 200.000</span></div>
+        <div class="dd-pnl" id="pnlDailyDisp">Rp 0</div>
+        <div class="progress-bg"><div class="progress-fill" id="barDaily" style="width:0%"></div></div>
+        <div class="dd-action" id="actDailyDisp">Action: Close platform if hit.</div>
+      </div>
+
+      <div class="dd-card">
+        <div class="dd-header"><span>Weekly Drawdown (3%)</span><span class="dd-limit" id="limitWeeklyDisp">-Rp 300.000</span></div>
+        <div class="dd-pnl" id="pnlWeeklyDisp">Rp 0</div>
+        <div class="progress-bg"><div class="progress-fill" id="barWeekly" style="width:0%"></div></div>
+        <div class="dd-action" id="actWeeklyDisp">Action: Revert to 10M tier next week if hit.</div>
+      </div>
+
+      <div class="dd-card">
+        <div class="dd-header"><span>Monthly Drawdown (7%)</span><span class="dd-limit" id="limitMonthlyDisp">-Rp 700.000</span></div>
+        <div class="dd-pnl" id="pnlMonthlyDisp">Rp 0</div>
+        <div class="progress-bg"><div class="progress-fill" id="barMonthly" style="width:0%"></div></div>
+        <div class="dd-action" id="actMonthlyDisp">Action: 5-Day Mandatory Pause & Audit if hit.</div>
+      </div>
+
+    </div>
   </div>
 
-  <div id="tab-execute" class="tab-content active">
-    
-    <div class="card strip">
-      <div class="strip-item">
-        <div class="strip-label">Active Capital Tier</div>
-        <div class="strip-val val-accent" id="activeCapDisp">Rp 10,000,000</div>
-        <div class="strip-sub" id="streakSubDisp">0 clean trades streak</div>
+  <div class="card strip">
+    <div class="strip-item">
+      <div class="strip-label">Active Capital Tier</div>
+      <div class="strip-val val-accent" id="activeCapDisp">Rp 10.000.000</div>
+      <div class="strip-sub" id="streakSubDisp">0 clean trades streak</div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-label">Risk Per Trade (0.5%)</div>
+      <div class="strip-val val-red" id="maxLossDisp">Rp 50.000</div>
+      <div class="strip-sub">Hard Stop Cap</div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-label">Max Position (25%)</div>
+      <div class="strip-val" id="posCapDisp">Rp 2.500.000</div>
+      <div class="strip-sub">Maximum Exposure</div>
+    </div>
+    <div class="strip-item" style="flex:1.5; min-width:200px;">
+      <div class="strip-label">Next Capital Upgrade</div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px;">
+        <span id="nextTierLabel">Rp 15M Unlock</span>
+        <span id="streakCountDisp">0/10</span>
       </div>
-      <div class="strip-item">
-        <div class="strip-label">Risk Per Trade (0.5%)</div>
-        <div class="strip-val val-red" id="maxLossDisp">Rp 50,000</div>
-        <div class="strip-sub">Hard Stop</div>
+      <div class="progress-bg" style="margin-top:0"><div class="progress-fill" id="upgradeBar" style="width:0%; background:var(--accent)"></div></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Position Sizing Calculator</div>
+
+      <div class="field">
+        <label>Ticker</label>
+        <input type="text" id="ticker" placeholder="BREN" maxlength="6" style="text-transform:uppercase;" />
       </div>
-      <div class="strip-item">
-        <div class="strip-label">Position Cap (25%)</div>
-        <div class="strip-val" id="posCapDisp">Rp 2,500,000</div>
-        <div class="strip-sub">Max exposure</div>
+
+      <div class="field">
+        <label>Harga Entry (Rp)</label>
+        <input type="number" id="entry" value="0" step="1" />
       </div>
-      <div class="strip-item" style="flex:2">
-        <div class="strip-label">Next Capital Upgrade</div>
-        <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px;">
-          <span id="nextTierLabel">Rp 15M Unlock</span>
-          <span id="streakCountDisp">0/10</span>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Stop Loss (SL)</label>
+          <div class="input-group">
+            <input type="number" id="slPct" placeholder="%" step="0.5" value="5" />
+            <input type="number" id="sl" placeholder="Rp" step="1" value="0" />
+          </div>
         </div>
-        <div class="progress-bg" style="margin-top:0"><div class="progress-fill" id="upgradeBar" style="width:0%; background:var(--accent)"></div></div>
+        <div class="field">
+          <label>Target 1 (TP1)</label>
+          <div class="input-group">
+            <input type="number" id="tp1Pct" placeholder="%" step="0.5" value="7.5" />
+            <input type="number" id="tp1" placeholder="Rp" step="1" value="0" />
+          </div>
+        </div>
       </div>
+
+      <div class="field">
+        <label>Target 2 (TP2)</label>
+        <div class="input-group">
+          <input type="number" id="tp2Pct" placeholder="%" step="0.5" value="18" />
+          <input type="number" id="tp2" placeholder="Rp" step="1" value="0" />
+        </div>
+      </div>
+
+      <div class="result-grid">
+        <div class="result-box danger">
+          <div class="result-label">Max Rugi</div>
+          <div class="result-val" id="rMaxLoss">—</div>
+          <div class="result-sub">0.5% Modal</div>
+        </div>
+        <div class="result-box success">
+          <div class="result-label">Jumlah Saham</div>
+          <div class="result-val" id="rShares">—</div>
+          <div class="result-sub">Lot (dibulatkan)</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">Nilai Posisi</div>
+          <div class="result-val" id="rPosVal">—</div>
+          <div class="result-sub" id="rPosValPct">Cap: 25%</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">R:R Ratio</div>
+          <div class="result-val" id="rRR">—</div>
+          <div class="result-sub">Reward vs Risk</div>
+        </div>
+      </div>
+
+      <div id="calcAlert" style="margin-top:16px; padding:12px; border-radius:8px; display:none; font-size:13px; font-weight:500;"></div>
+      <button class="btn" onclick="openAddModal()">+ Log Position to Tracker</button>
     </div>
 
-    <div class="grid-2">
+    <div>
       <div class="card">
-        <div class="card-title"><div class="card-title-line">Sizing Calculator</div></div>
-
-        <div class="field" style="margin-bottom: 24px;">
-          <label>Ticker</label>
-          <input type="text" id="ticker" placeholder="BREN" maxlength="6" style="text-transform:uppercase;" />
-        </div>
-
-        <div id="calcWorkspace">
-          <div class="field">
-            <label>Harga Entry (Rp)</label>
-            <input type="number" id="entry" value="0" step="1" />
-          </div>
-
-          <div class="field-row">
-            <div class="field">
-              <label>Stop Loss (SL)</label>
-              <div class="input-group">
-                <input type="number" id="slPct" placeholder="%" step="0.5" value="5" />
-                <input type="number" id="sl" placeholder="Rp" step="1" value="0" />
-              </div>
-            </div>
-            <div class="field">
-              <label>Target 1 (TP1)</label>
-              <div class="input-group">
-                <input type="number" id="tp1Pct" placeholder="%" step="0.5" value="7.5" />
-                <input type="number" id="tp1" placeholder="Rp" step="1" value="0" />
-              </div>
-            </div>
-          </div>
-
-          <div class="field">
-            <label>Target 2 (TP2)</label>
-            <div class="input-group">
-              <input type="number" id="tp2Pct" placeholder="%" step="0.5" value="18" />
-              <input type="number" id="tp2" placeholder="Rp" step="1" value="0" />
-            </div>
-          </div>
-
-          <div class="result-grid">
-            <div class="result-box danger">
-              <div class="result-label">Max Rugi</div>
-              <div class="result-val" id="rMaxLoss">—</div>
-            </div>
-            <div class="result-box success">
-              <div class="result-label">Jumlah Saham (Lot)</div>
-              <div class="result-val" id="rShares">—</div>
-            </div>
-            <div class="result-box">
-              <div class="result-label">Nilai Posisi</div>
-              <div class="result-val" id="rPosVal">—</div>
-            </div>
-            <div class="result-box">
-              <div class="result-label">R:R Ratio</div>
-              <div class="result-val" id="rRR">—</div>
-            </div>
-          </div>
-          
-          <div id="calcAlert" style="margin-top:16px; padding:12px; border-radius:8px; display:none; font-size:13px; font-weight:500;"></div>
-          <button class="btn" id="btnAddPos" onclick="alert('Logging functionality connected to backend/local storage.')">+ Log Position to Tracker</button>
+        <div class="card-title">TP Protocol & Runner Math</div>
+        <div>
+          <div class="step"><div class="step-n" style="background:var(--green-bg); color:var(--green)">T1</div><span>TP1 (<b id="tp1disp">—</b>): Jual 40% = <b id="tp1shares">—</b> lot. Pindah SL ke Entry (Breakeven).</span></div>
+          <div class="step"><div class="step-n" style="background:var(--accent-bg); color:var(--accent)">T2</div><span>TP2 (<b id="tp2disp">—</b>): Jual 40% = <b id="tp2shares">—</b> lot. Profit total terkunci: <b id="tp2profit">—</b></span></div>
+          <div class="step" style="margin-bottom:0;"><div class="step-n" style="background:var(--purple-bg); color:var(--purple)">RN</div><span>Runner 20% = <b id="runnerShares">—</b> lot. Trail stop, biarkan jalan sampai trend patah.</span></div>
         </div>
       </div>
+
+      <div class="card">
+        <div class="card-title">30-Trade Challenge Tracker</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.4;">
+          Violation <span style="color:var(--gold); font-weight:600">(Gold)</span> resets your clean streak to zero. Capital scaling relies strictly on this counter. Click dots to change status.
+        </div>
+        <div class="challenge-grid" id="challengeGrid"></div>
+        <div class="challenge-legend">
+          <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div> Win</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div> Loss (Clean)</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div> Violation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:0;">
+    <div class="table-header">
+      <h2 style="font-size:16px; font-family:var(--font-serif); font-weight:600;">Trade Log & Active Positions</h2>
+      <button class="btn-small" onclick="clearPositions()">Clear History</button>
+    </div>
+    <div id="positionsContainer"></div>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <h3>Log Trade</h3>
+    <div class="field">
+      <label>Ticker</label>
+      <input type="text" id="mTicker" style="text-transform:uppercase" />
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Lot masuk</label><input type="number" id="mLots" /></div>
+      <div class="field"><label>Harga masuk (Rp)</label><input type="number" id="mEntry" /></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Stop Loss (Rp)</label><input type="number" id="mSL" /></div>
+      <div class="field"><label>TP1 (Rp)</label><input type="number" id="mTP1" /></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>TP2 (Rp)</label><input type="number" id="mTP2" /></div>
+      <div class="field">
+        <label>Status</label>
+        <select id="mStatus">
+          <option value="open">Open (SL Active)</option>
+          <option value="tp1">TP1 Hit (SL @ BE)</option>
+          <option value="closed">Closed (TP2 / Manual)</option>
+          <option value="sl">SL Hit</option>
+        </select>
+      </div>
+    </div>
+    <div class="field" id="exitPriceField" style="display:none;">
+      <label>Harga Exit Akhir (Rp)</label>
+      <input type="number" id="mExit" />
+    </div>
+    <div style="display:flex; gap:12px; margin-top:24px;">
+      <button class="btn secondary" onclick="closeModal()" style="margin-top:0;">Batal</button>
+      <button class="btn" onclick="savePosition()" style="margin-top:0;">Simpan Posisi</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE VARIABLES ──
+// Changed local storage key to v4 to ensure completely fresh start
+let positions = JSON.parse(localStorage.getItem('buffon_pos_v4') || '[]');
+let challengeData = JSON.parse(localStorage.getItem('buffon_challenge_v4') || 'null') || new Array(30).fill(0);
+
+let activeCapital = 10000000; 
+let cleanStreak = 0;
+const RISK_PCT = 0.5; // Locked to Survival Mode per v3.1 rules
+const MAX_CAP_PCT = 0.25;
+
+// ── FORMATTERS ──
+function fmt(n) { return Math.round(n).toLocaleString('id-ID'); }
+function fmtRp(n) { return 'Rp ' + fmt(n); }
+function fmtPct(n) { return n.toFixed(1) + '%'; }
+
+// ── MORNING GATE LOGIC ──
+function unlockPlatform() {
+  const focus = parseInt(document.getElementById('mgFocus').value) || 0;
+  const macro = document.getElementById('mgMacro').value;
+  const err = document.getElementById('mgError');
+
+  if (focus < 7) {
+    err.style.display = 'block';
+    err.textContent = "CRITICAL FAIL: Focus score below 7. Protocol dictates no trading today. Do not proceed.";
+    return;
+  }
+  
+  if (macro === 'red') {
+    alert("DEFENSIVE PROTOCOL: Macro is Red. Wait 30 minutes after market open before entering any trades.");
+  }
+
+  document.getElementById('morningGate').classList.remove('open');
+  
+  // Initialize Core Logic
+  calculateCapitalTier();
+  calcSizing();
+  renderPositions();
+}
+
+// ── DYNAMIC CAPITAL SCALING ──
+function calculateCapitalTier() {
+  cleanStreak = 0;
+  // Calculate continuous valid streak (1=win, 2=loss). 3=violation resets it.
+  for (let i = 0; i < 30; i++) {
+    if (challengeData[i] === 1 || challengeData[i] === 2) {
+      cleanStreak++;
+    } else if (challengeData[i] === 3) {
+      cleanStreak = 0;
+    } else if (challengeData[i] === 0) {
+      break; 
+    }
+  }
+
+  // Determine Tier based on streak
+  if (cleanStreak >= 30) activeCapital = 25000000;
+  else if (cleanStreak >= 20) activeCapital = 20000000;
+  else if (cleanStreak >= 10) activeCapital = 15000000;
+  else activeCapital = 10000000;
+
+  // Update UI Elements
+  document.getElementById('activeCapDisp').textContent = fmtRp(activeCapital);
+  document.getElementById('streakSubDisp').textContent = `${cleanStreak} unbroken trades`;
+  document.getElementById('maxLossDisp').textContent = fmtRp(activeCapital * (RISK_PCT/100));
+  document.getElementById('posCapDisp').textContent = fmtRp(activeCapital * MAX_CAP_PCT);
+
+  // Upgrade Progress Bar
+  let nextTarget = 10, currentProg = cleanStreak, label = "Rp 15M Unlock";
+  if (cleanStreak >= 30) { nextTarget = 30; currentProg = 30; label = "MAX TIER REACHED (25M)"; }
+  else if (cleanStreak >= 20) { nextTarget = 30; label = "Rp 25M Unlock"; }
+  else if (cleanStreak >= 10) { nextTarget = 20; label = "Rp 20M Unlock"; }
+  
+  document.getElementById('nextTierLabel').textContent = label;
+  document.getElementById('streakCountDisp').textContent = `${currentProg}/${nextTarget}`;
+  document.getElementById('upgradeBar').style.width = Math.min((currentProg/nextTarget)*100, 100) + '%';
+  
+  // Run dependent functions
+  updateDrawdownMonitor();
+  calcSizing(); // Recalculate sizing just in case capital changed
+}
+
+// ── SYNC & SIZING CALCULATOR ──
+const inputs = {
+  entry: document.getElementById('entry'),
+  sl: document.getElementById('sl'), slPct: document.getElementById('slPct'),
+  tp1: document.getElementById('tp1'), tp1Pct: document.getElementById('tp1Pct'),
+  tp2: document.getElementById('tp2'), tp2Pct: document.getElementById('tp2Pct')
+};
+
+// Auto-calculate Price from Percentage
+function calcPriceFromPct(type) {
+  const entry = parseFloat(inputs.entry.value) || 0;
+  if (!entry) return;
+  const pct = parseFloat(inputs[type + 'Pct'].value) || 0;
+  if (type === 'sl') inputs.sl.value = Math.round(entry - (entry * (pct / 100)));
+  else inputs[type].value = Math.round(entry + (entry * (pct / 100)));
+  calcSizing();
+}
+
+// Auto-calculate Percentage from Price
+function calcPctFromPrice(type) {
+  const entry = parseFloat(inputs.entry.value) || 0;
+  if (!entry) return;
+  const price = parseFloat(inputs[type].value) || 0;
+  if (!price) return;
+  if (type === 'sl') inputs.slPct.value = (((entry - price) / entry) * 100).toFixed(2);
+  else inputs[type + 'Pct'].value = (((price - entry) / entry) * 100).toFixed(2);
+  calcSizing();
+}
+
+// If Entry changes, maintain percentages and update prices
+function syncAllFromEntry() { 
+    calcPriceFromPct('sl'); 
+    calcPriceFromPct('tp1'); 
+    calcPriceFromPct('tp2'); 
+}
+
+// Attach listeners
+inputs.slPct.addEventListener('input', () => calcPriceFromPct('sl'));
+inputs.tp1Pct.addEventListener('input', () => calcPriceFromPct('tp1'));
+inputs.tp2Pct.addEventListener('input', () => calcPriceFromPct('tp2'));
+inputs.sl.addEventListener('input', () => calcPctFromPrice('sl'));
+inputs.tp1.addEventListener('input', () => calcPctFromPrice('tp1'));
+inputs.tp2.addEventListener('input', () => calcPctFromPrice('tp2'));
+inputs.entry.addEventListener('input', syncAllFromEntry);
+
+// Main Core Math
+function calcSizing() {
+  const entry = parseFloat(inputs.entry.value) || 0;
+  const sl = parseFloat(inputs.sl.value) || 0;
+  const tp1 = parseFloat(inputs.tp1.value) || 0;
+  const tp2 = parseFloat(inputs.tp2.value) || 0;
+
+  if (!entry || !sl || sl >= entry) return;
+
+  const maxLoss = activeCapital * (RISK_PCT / 100);
+  const maxPosValue = activeCapital * MAX_CAP_PCT;
+  
+  const diff = entry - sl;
+  const slPct = (diff / entry) * 100;
+  
+  // Lot calculation (round down)
+  const rawShares = maxLoss / diff;
+  const posValUncapped = Math.floor(rawShares / 100) * 100 * entry;
+  const cappedLots = Math.floor(Math.min(posValUncapped, maxPosValue) / entry / 100) * 100;
+  const finalPosVal = cappedLots * entry;
+
+  let rr = '—';
+  if (tp2 > entry && sl < entry) {
+    rr = ((tp2 - entry) / diff).toFixed(2) + ':1';
+  }
+
+  // Update Core UI
+  document.getElementById('rMaxLoss').textContent = fmtRp(cappedLots * diff);
+  document.getElementById('rShares').textContent = fmt(cappedLots);
+  document.getElementById('rPosVal').textContent = fmtRp(finalPosVal);
+  document.getElementById('rPosValPct').textContent = fmtPct((finalPosVal/activeCapital)*100) + ' Modal';
+  document.getElementById('rRR').textContent = rr;
+
+  // Update TP Runner UI
+  const t1s = Math.floor(cappedLots * 0.40 / 100) * 100; // 40% exit
+  document.getElementById('tp1disp').textContent = tp1 ? fmtRp(tp1) + ' (+' + fmtPct(((tp1-entry)/entry)*100) + ')' : '—';
+  document.getElementById('tp1shares').textContent = fmt(t1s);
+  document.getElementById('tp2disp').textContent = tp2 ? fmtRp(tp2) + ' (+' + fmtPct(((tp2-entry)/entry)*100) + ')' : '—';
+  document.getElementById('tp2shares').textContent = fmt(t1s);
+  document.getElementById('tp2profit').textContent = tp2 ? fmtRp((t1s*(tp1-entry)) + (t1s*(tp2-entry))) : '—';
+  document.getElementById('runnerShares').textContent = fmt(cappedLots - (t1s * 2));
+
+  // Dynamic Warning Alerts
+  const alertEl = document.getElementById('calcAlert');
+  alertEl.style.display = 'block';
+  if (slPct < 2.5) {
+    alertEl.style.background = 'var(--gold-bg)'; alertEl.style.color = 'var(--gold)';
+    alertEl.innerHTML = `⚠ <b>SL terlalu ketat</b> (${slPct.toFixed(1)}%). Widen SL or accept noise risk.`;
+  } else if (posValUncapped > maxPosValue) {
+    alertEl.style.background = 'var(--red-bg)'; alertEl.style.color = 'var(--red)';
+    alertEl.innerHTML = `🚫 <b>Max Position Cap Hit.</b> Position scaled down automatically to ${fmt(cappedLots)} lots.`;
+  } else {
+    alertEl.style.background = 'var(--green-bg)'; alertEl.style.color = 'var(--green)';
+    alertEl.innerHTML = `✓ System compliant. Exact risk is ${fmtRp(cappedLots * diff)}.`;
+  }
+}
+
+// ── LOG POSITION & MODAL ──
+function openAddModal() {
+  const entry = parseFloat(inputs.entry.value) || 0;
+  const sl = parseFloat(inputs.sl.value) || 0;
+  let lots = parseInt(document.getElementById('rShares').textContent.replace(/\./g, '')) || 0;
+
+  document.getElementById('mTicker').value = document.getElementById('ticker').value.toUpperCase();
+  document.getElementById('mEntry').value = entry || '';
+  document.getElementById('mSL').value = sl || '';
+  document.getElementById('mTP1').value = inputs.tp1.value || '';
+  document.getElementById('mTP2').value = inputs.tp2.value || '';
+  document.getElementById('mLots').value = lots || '';
+  document.getElementById('mStatus').value = 'open';
+  document.getElementById('mExit').value = '';
+  document.getElementById('exitPriceField').style.display = 'none';
+  
+  document.getElementById('addModal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('addModal').classList.remove('open'); }
+
+// Show/hide exit price depending on status
+document.getElementById('mStatus').addEventListener('change', (e) => {
+  document.getElementById('exitPriceField').style.display = ['closed','sl'].includes(e.target.value) ? 'block' : 'none';
+});
+
+function savePosition() {
+  const ticker = document.getElementById('mTicker').value.trim();
+  const lots = parseInt(document.getElementById('mLots').value) || 0;
+  const entry = parseFloat(document.getElementById('mEntry').value) || 0;
+  const sl = parseFloat(document.getElementById('mSL').value) || 0;
+  
+  if (!ticker || !lots || !entry || !sl) { alert('Lengkapi Ticker, Lot, Entry, dan SL.'); return; }
+
+  const tp1 = parseFloat(document.getElementById('mTP1').value) || 0;
+  const tp2 = parseFloat(document.getElementById('mTP2').value) || 0;
+  const status = document.getElementById('mStatus').value;
+  const exitPrice = parseFloat(document.getElementById('mExit').value) || 0;
+
+  // Basic P&L estimation for the tracker table
+  let pnl = 0;
+  if (status === 'closed' && exitPrice) pnl = (exitPrice - entry) * lots * 100;
+  else if (status === 'sl') pnl = (sl - entry) * lots * 100;
+  else if (status === 'tp1') pnl = (tp1 - entry) * (lots * 0.4) * 100; 
+
+  positions.push({ id: Date.now(), ticker, lots, entry, sl, tp1, tp2, status, exitPrice, pnl, date: new Date().toLocaleDateString('id-ID') });
+  
+  localStorage.setItem('buffon_pos_v4', JSON.stringify(positions));
+  renderPositions();
+  closeModal();
+}
+
+function delPos(id) {
+  positions = positions.filter(p => p.id !== id);
+  localStorage.setItem('buffon_pos_v4', JSON.stringify(positions));
+  renderPositions(); 
+}
+
+function clearPositions() {
+  if(confirm('Hapus seluruh riwayat posisi lokal?')) {
+    positions = [];
+    localStorage.setItem('buffon_pos_v4', '[]');
+    renderPositions();
+  }
+}
+
+// Render Table
+function renderPositions() {
+  const c = document.getElementById('positionsContainer');
+  if (!positions.length) {
+    c.innerHTML = '<div class="empty-state">No positions logged. Use the calculator to add trades.</div>';
+    updateDrawdownMonitor();
+    return;
+  }
+
+  const badges = { open:'st-open', tp1:'st-tp1', closed:'st-closed', sl:'st-sl' };
+  const lbls = { open:'Open', tp1:'TP1 Hit', closed:'Closed', sl:'SL Hit' };
+
+  let html = `<div style="overflow-x:auto"><table class="positions-table">
+    <thead><tr><th>Ticker</th><th>Date</th><th>Lot</th><th>Entry</th><th>SL</th><th>TP1/TP2</th><th>Status</th><th>P&L</th><th></th></tr></thead><tbody>`;
+  
+  positions.forEach(p => {
+    const pnlTxt = p.pnl !== 0 ? (p.pnl > 0 ? '+' : '') + fmtRp(p.pnl) : '—';
+    const pnlCol = p.pnl > 0 ? 'var(--green)' : p.pnl < 0 ? 'var(--red)' : 'var(--text-muted)';
+    html += `
+      <tr>
+        <td><span class="ticker-badge">${p.ticker}</span></td>
+        <td style="font-size:12px; color:var(--text-muted)">${p.date}</td>
+        <td>${fmt(p.lots)}</td>
+        <td>${fmtRp(p.entry)}</td>
+        <td style="color:var(--red)">${fmtRp(p.sl)}</td>
+        <td>${p.tp1 ? fmtRp(p.tp1) : '—'} / ${p.tp2 ? fmtRp(p.tp2) : '—'}</td>
+        <td><span class="status-pill ${badges[p.status]}">${lbls[p.status]}</span></td>
+        <td style="color:${pnlCol}; font-weight:600">${pnlTxt}</td>
+        <td><button class="btn-small" onclick="delPos(${p.id})">✕</button></td>
+      </tr>`;
+  });
+  c.innerHTML = html + `</tbody></table></div>`;
+  
+  updateDrawdownMonitor(); // Re-sync drawdowns when table updates
+}
+
+// ── DRAWDOWN MONITOR LOGIC ──
+function updateDrawdownMonitor() {
+  // Aggregate all logged P&L for demonstration/local tracking purposes
+  const totalPnl = positions.reduce((acc, p) => acc + (p.pnl || 0), 0);
+  
+  // Calculate dynamic limits based on active capital tier
+  const dailyL = activeCapital * 0.02;
+  const weeklyL = activeCapital * 0.03;
+  const monthlyL = activeCapital * 0.07;
+
+  document.getElementById('limitDailyDisp').textContent = "-Rp " + fmt(dailyL);
+  document.getElementById('limitWeeklyDisp').textContent = "-Rp " + fmt(weeklyL);
+  document.getElementById('limitMonthlyDisp').textContent = "-Rp " + fmt(monthlyL);
+
+  const displayPnl = (elId, val, limit, barId, actId, stopTxt) => {
+    const el = document.getElementById(elId);
+    el.textContent = (val > 0 ? "+" : "") + fmtRp(val);
+    el.style.color = val > 0 ? "var(--green)" : val < 0 ? "var(--red)" : "var(--text-main)";
+    
+    // Calculate Drawdown percentage (only if negative)
+    const loss = Math.max(0, -val);
+    const pct = Math.min((loss / limit) * 100, 100);
+    
+    document.getElementById(barId).style.width = pct + "%";
+    document.getElementById(barId).style.background = pct > 80 ? "var(--red)" : pct > 50 ? "var(--gold)" : "var(--green)";
+    
+    if(pct >= 100) {
+        document.getElementById(actId).textContent = "CRITICAL: " + stopTxt;
+        document.getElementById(actId).style.color = "var(--red)";
+        document.getElementById(actId).style.fontWeight = "600";
+    } else {
+        // Reset defaults if recovered/positive
+        if(elId === 'pnlDailyDisp') document.getElementById(actId).textContent = "Action: Close platform if hit.";
+        if(elId === 'pnlWeeklyDisp') document.getElementById(actId).textContent = "Action: Revert to 10M tier next week if hit.";
+        if(elId === 'pnlMonthlyDisp') document.getElementById(actId).textContent = "Action: 5-Day Mandatory Pause & Audit if hit.";
+        document.getElementById(actId).style.color = "var(--text-muted)";
+        document.getElementById(actId).style.fontWeight = "500";
+    }
+  };
+
+  displayPnl('pnlDailyDisp', totalPnl, dailyL, 'barDaily', 'actDailyDisp', "LIMIT HIT. Close Stockbit immediately.");
+  displayPnl('pnlWeeklyDisp', totalPnl, weeklyL, 'barWeekly', 'actWeeklyDisp', "LIMIT HIT. Next week scales down.");
+  displayPnl('pnlMonthlyDisp', totalPnl, monthlyL, 'barMonthly', 'actMonthlyDisp', "LIMIT HIT. 5-Day Pause Mandated.");
+}
+
+// ── 30-TRADE CHALLENGE TRACKER ──
+function renderChallenge() {
+  const g = document.getElementById('challengeGrid');
+  g.innerHTML = '';
+  challengeData.forEach((s, i) => {
+    const d = document.createElement('div');
+    d.className = 'trade-dot' + (s===1 ? ' win' : s===2 ? ' loss' : s===3 ? ' violation' : '');
+    d.textContent = i + 1;
+    d.onclick = () => {
+      // Toggle states: Pending(0) -> Win(1) -> Loss(2) -> Violation(3) -> loop
+      challengeData[i] = (s + 1) % 4;
+      localStorage.setItem('buffon_challenge_v4', JSON.stringify(challengeData));
+      renderChallenge();
+      calculateCapitalTier(); 
+    };
+    g.appendChild(d);
+  });
+}
+
+// Initialize Tracker Dots (Pre-Gate)
+renderChallenge();
+</script>
+</body>
+</html>
