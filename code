@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BUFFON — Position Sizing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Claude-inspired Color Palette */
+    --bg: #f7f5f2;
+    --surface: #ffffff;
+    --surface-hover: #fcfbf9;
+    --border: #e5e3db;
+    --border-dark: #d1cfc7;
+    
+    --text-main: #2d2b2a;
+    --text-muted: #6b6965;
+    
+    --accent: #da7756; /* Terracotta / Rust */
+    --accent-hover: #c66546;
+    --accent-bg: #f9edea;
+    
+    --green: #467a57;
+    --green-bg: #eaf1ec;
+    
+    --red: #b84b4b;
+    --red-bg: #f8eaea;
+    
+    --gold: #b07d35;
+    --gold-bg: #f8f1e6;
+    
+    --purple: #7a6399;
+    --purple-bg: #f0ecf5;
+
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-serif: 'Playfair Display', Georgia, serif;
+    
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .container { 
+    max-width: 1100px; 
+    margin: 0 auto; 
+    padding: 0 24px 64px 24px; 
+  }
+
+  /* TYPOGRAPHY & HEADER */
+  header {
+    padding: 40px 0 32px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .logo {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .logo span { color: var(--accent); }
+  .title-block h1 {
+    font-family: var(--font-serif);
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+
+  /* BADGES */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .badge.survival { color: var(--red); background: var(--red-bg); border: 1px solid rgba(184,75,75,0.2); }
+  .badge.high { color: var(--gold); background: var(--gold-bg); border: 1px solid rgba(176,125,53,0.2); }
+  .badge.favorable { color: var(--green); background: var(--green-bg); border: 1px solid rgba(70,122,87,0.2); }
+  
+  .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .survival .dot { background: var(--red); }
+  .high .dot { background: var(--gold); }
+  .favorable .dot { background: var(--green); }
+
+  /* CARDS & PANELS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 24px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .card-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* STRIPS (IDR & Summary) */
+  .strip {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .strip-item { flex: 1; min-width: 140px; }
+  .strip-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .strip-val {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+  .strip-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .val-green { color: var(--green); }
+  .val-red { color: var(--red); }
+  .val-gold { color: var(--gold); }
+  .val-accent { color: var(--accent); }
+
+  /* GRID LAYOUTS */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* FORMS & INPUTS */
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-main);
+    margin-bottom: 8px;
+  }
+  .field input, .field select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border-dark);
+    border-radius: 8px;
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    padding: 12px 14px;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+  .field input:focus, .field select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(218, 119, 86, 0.15);
+  }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* RESULT BOXES */
+  .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px; }
+  .result-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    border-left: 4px solid var(--border-dark);
+  }
+  .result-box.danger { border-left-color: var(--red); }
+  .result-box.success { border-left-color: var(--green); }
+  .result-box.warn { border-left-color: var(--gold); }
+  
+  .result-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+  .result-val { font-size: 18px; font-weight: 600; color: var(--text-main); }
+  .result-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ALERTS */
+  .alert-box {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 24px;
+    display: none;
+    line-height: 1.4;
+  }
+  .alert-box.warn { background: var(--gold-bg); border: 1px solid rgba(176,125,53,0.3); color: var(--gold); }
+  .alert-box.bad { background: var(--red-bg); border: 1px solid rgba(184,75,75,0.3); color: var(--red); }
+  .alert-box.ok { background: var(--green-bg); border: 1px solid rgba(70,122,87,0.3); color: var(--green); }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    margin-top: 24px;
+  }
+  .btn:hover { background: var(--accent-hover); }
+  .btn:active { transform: translateY(1px); }
+  .btn.secondary {
+    background: var(--surface);
+    color: var(--text-main);
+    border: 1px solid var(--border-dark);
+  }
+  .btn.secondary:hover { background: var(--bg); }
+  
+  .btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-dark);
+    border-radius: 6px;
+    width: auto;
+    margin: 0;
+  }
+  .btn-small:hover { border-color: var(--red); color: var(--red); }
+
+  /* STEPS */
+  .step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .step-n {
+    width: 24px; height: 24px;
+    border-radius: 12px;
+    background: var(--border-dark);
+    color: var(--text-main);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .step b { color: var(--text-main); font-weight: 600; }
+
+  /* PROGRESS BAR */
+  .progress-bg {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 3px;
+    transition: width 0.3s ease, background 0.3s ease;
+  }
+
+  /* CHALLENGE TRACKER */
+  .challenge-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .trade-dot {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .trade-dot.win { background: var(--green-bg); border-color: rgba(70,122,87,0.3); color: var(--green); }
+  .trade-dot.loss { background: var(--red-bg); border-color: rgba(184,75,75,0.3); color: var(--red); }
+  .trade-dot.violation { background: var(--gold-bg); border-color: rgba(176,125,53,0.3); color: var(--gold); }
+  .trade-dot:hover { border-color: var(--accent); color: var(--accent); }
+  
+  .challenge-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 16px; font-size: 12px; color: var(--text-muted); }
+  .leg-item { display: flex; align-items: center; gap: 6px; }
+  .leg-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+  /* TABLE */
+  .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .table-header h2 { font-size: 16px; font-weight: 600; }
+  
+  .positions-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .positions-table th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  .positions-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-main);
+    vertical-align: middle;
+  }
+  .positions-table tr:hover td { background: var(--surface-hover); }
+  
+  .ticker-badge {
+    font-weight: 600;
+    color: var(--text-main);
+  }
+  
+  .status-pill {
+    display: inline-flex;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .st-open { background: var(--green-bg); color: var(--green); }
+  .st-tp1 { background: var(--accent-bg); color: var(--accent); }
+  .st-closed { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); }
+  .st-sl { background: var(--red-bg); color: var(--red); }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(45, 43, 42, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 32px;
+    width: 100%;
+    max-width: 480px;
+    margin: 20px;
+    box-shadow: var(--shadow-md);
+    animation: slideUp 0.2s ease;
+  }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .modal h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: var(--text-main);
+  }
+  .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text-muted);
+    font-size: 14px;
+    border: 1px dashed var(--border-dark);
+    border-radius: 12px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 32px 0;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="header-inner">
+      <div>
+        <div class="logo">BUFFON <span>/</span> IHSG SCALPING SYSTEM <span>/</span> v3.1</div>
+        <div class="title-block"><h1>Position Sizing Calculator</h1></div>
+      </div>
+      <div id="regimeBadge" class="badge survival">
+        <div class="dot"></div>
+        <span id="regimeText">SURVIVAL MODE</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="card strip">
+    <div class="strip-item" style="max-width: 180px;">
+      <div class="strip-label">USD/IDR Sekarang</div>
+      <div class="field" style="margin:0;">
+        <input type="number" id="idrRate" value="17600" step="100" style="font-weight:600; padding:8px 12px;" />
+      </div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-label">Risk / Trade</div>
+      <div class="strip-val" id="idrRiskPct">0.5%</div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-label">Max Loss / Trade</div>
+      <div class="strip-val val-red" id="idrMaxLoss">Rp 125.000</div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-label">Max Position</div>
+      <div class="strip-val val-gold" id="idrMaxPos">25% — Rp 6.250.000</div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-label">Regime</div>
+      <div class="strip-val val-red" id="idrRegimeTxt">SURVIVAL</div>
+    </div>
+  </div>
+
+  <div class="card strip" id="summaryStrip">
+    <div class="strip-item">
+      <div class="strip-label">Total Modal</div>
+      <div class="strip-val val-accent" id="sumCapital">Rp 25.000.000</div>
+      <div class="strip-sub">25M deployment</div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-label">Posisi Aktif</div>
+      <div class="strip-val" id="sumOpenPos">0</div>
+      <div class="strip-sub" id="sumOpenVal">Rp 0 exposed</div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-label">Realized P&L</div>
+      <div class="strip-val" id="sumPnl">Rp 0</div>
+      <div class="strip-sub" id="sumPnlPct">0.00%</div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-label">Daily P&L</div>
+      <div class="strip-val" id="sumDailyPnl">Rp 0</div>
+      <div class="strip-sub" id="sumDailyLimit">Limit: Rp 500.000</div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-label">Win Rate</div>
+      <div class="strip-val" id="sumWinRate">—</div>
+      <div class="strip-sub" id="sumWinRateSub">0 trades total</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Kalkulator Posisi</div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Modal (Rp)</label>
+          <input type="number" id="capital" value="25000000" />
+        </div>
+        <div class="field">
+          <label>Risk % (Auto dari IDR)</label>
+          <input type="number" id="riskPct" value="0.5" step="0.25" min="0.25" max="2" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Ticker</label>
+        <input type="text" id="ticker" placeholder="BREN" maxlength="6" style="text-transform:uppercase" />
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Harga Entry (Rp)</label>
+          <input type="number" id="entry" value="220" step="1" />
+        </div>
+        <div class="field">
+          <label>Harga Stop Loss (Rp)</label>
+          <input type="number" id="sl" value="209" step="1" />
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Target 1 (TP1)</label>
+          <input type="number" id="tp1" value="237" step="1" />
+        </div>
+        <div class="field">
+          <label>Target 2 (TP2)</label>
+          <input type="number" id="tp2" value="260" step="1" />
+        </div>
+      </div>
+
+      <div class="result-grid">
+        <div class="result-box danger">
+          <div class="result-label">Max Rugi</div>
+          <div class="result-val" id="rMaxLoss">—</div>
+          <div class="result-sub" id="rMaxLossPct">—</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">SL Width</div>
+          <div class="result-val" id="rSlWidth">—</div>
+          <div class="result-sub">dari entry</div>
+        </div>
+        <div class="result-box success">
+          <div class="result-label">Jumlah Saham</div>
+          <div class="result-val" id="rShares">—</div>
+          <div class="result-sub">lembar (round lot)</div>
+        </div>
+        <div class="result-box warn">
+          <div class="result-label">Nilai Posisi</div>
+          <div class="result-val" id="rPosVal">—</div>
+          <div class="result-sub" id="rPosValPct">—</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">R:R Ratio</div>
+          <div class="result-val" id="rRR">—</div>
+          <div class="result-sub">target ≥ 2:1</div>
+        </div>
+        <div class="result-box success">
+          <div class="result-label">Profit if TP2</div>
+          <div class="result-val" id="rProfit">—</div>
+          <div class="result-sub" id="rProfitPct">—</div>
+        </div>
+      </div>
+
+      <div class="alert-box" id="alertBox"></div>
+      <button class="btn" onclick="openAddModal()">+ Tambah ke Posisi Saya</button>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-title">Formula Step-by-Step</div>
+        <div>
+          <div class="step"><div class="step-n">1</div><span>Modal kamu = <b id="s1">—</b></span></div>
+          <div class="step"><div class="step-n">2</div><span>Max rugi <b id="s2pct">—</b> = <b id="s2">—</b></span></div>
+          <div class="step"><div class="step-n">3</div><span>Entry <b id="s3e">—</b> − SL <b id="s3s">—</b> = rugi per lembar = <b id="s3r">—</b></span></div>
+          <div class="step"><div class="step-n">4</div><span><b id="s4a">—</b> ÷ <b id="s4b">—</b> = <b id="s4c">—</b> → bulatkan lot = <b id="s4lot">—</b> lembar</span></div>
+          <div class="step" style="margin-bottom:0;"><div class="step-n">5</div><span>Nilai posisi = <b id="s5lots">—</b> × <b id="s5e">—</b> = <b id="s5val">—</b></span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">TP Structure (v3.1 Protocol)</div>
+        <div>
+          <div class="step"><div class="step-n" style="background:var(--green-bg); color:var(--green)">T1</div><span>TP1 hit (<b id="tp1disp">—</b>): jual 40% → <b id="tp1shares">—</b> lembar. Pindah SL ke breakeven.</span></div>
+          <div class="step"><div class="step-n" style="background:var(--accent-bg); color:var(--accent)">T2</div><span>TP2 hit (<b id="tp2disp">—</b>): jual 40% → <b id="tp2shares">—</b> lembar. Profit terkunci: <b id="tp2profit">—</b></span></div>
+          <div class="step" style="margin-bottom:0;"><div class="step-n" style="background:var(--purple-bg); color:var(--purple)">RN</div><span>Runner 20% = <b id="runnerShares">—</b> lembar. Trail stop, biarkan jalan sampai trend patah.</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Daily Drawdown Status</div>
+        <div style="display:flex; gap:16px;">
+          <div style="flex:1">
+            <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">Daily P&L</div>
+            <div style="font-size:18px; font-weight:600;" id="ddPnl">Rp 0</div>
+          </div>
+          <div style="flex:1">
+            <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">Sisa ke Limit</div>
+            <div style="font-size:18px; font-weight:600; color:var(--red);" id="ddRemain">Rp 500.000</div>
+          </div>
+        </div>
+        <div class="progress-bg">
+          <div class="progress-fill" id="ddBar" style="width:0%"></div>
+        </div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:8px;" id="ddStatus">0% dari daily limit terpakai</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="table-header" style="margin-bottom:4px;">
+      <h2 style="font-size:14px;">30-Trade Challenge Tracker</h2>
+      <button class="btn-small" onclick="resetChallenge()">Reset Tracker</button>
+    </div>
+    <div style="font-size:12px; color:var(--text-muted);">Klik kotak untuk mengubah status. Biasakan eksekusi sesuai plan.</div>
+    
+    <div class="challenge-grid" id="challengeGrid"></div>
+    
+    <div class="challenge-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div> Win (Clean execution)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div> Loss (Clean execution)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div> Violation (Resets streak)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--surface); border:1px solid var(--border)"></div> Pending</div>
+    </div>
+    
+    <div class="strip" id="challengeInfo" style="margin-top:24px; padding-top:24px; border-top:1px solid var(--border);"></div>
+    <div class="progress-bg"><div class="progress-fill" id="challengeBar" style="width:0%; background:var(--accent)"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="table-header">
+      <h2 style="font-size:14px;">Posisi Saya</h2>
+      <button class="btn-small" onclick="clearPositions()">Hapus Semua</button>
+    </div>
+    <div id="positionsContainer">
+      <div class="empty-state">Belum ada posisi. Isi kalkulator lalu klik "Tambah ke Posisi Saya"</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <h3>Tambah Posisi</h3>
+    <div class="field">
+      <label>Ticker</label>
+      <input type="text" id="mTicker" style="text-transform:uppercase" />
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Lot masuk</label>
+        <input type="number" id="mLots" />
+      </div>
+      <div class="field">
+        <label>Harga masuk</label>
+        <input type="number" id="mEntry" />
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Stop Loss</label>
+        <input type="number" id="mSL" />
+      </div>
+      <div class="field">
+        <label>TP1</label>
+        <input type="number" id="mTP1" />
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>TP2</label>
+        <input type="number" id="mTP2" />
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select id="mStatus">
+          <option value="open">Open</option>
+          <option value="tp1">TP1 Hit (SL di BE)</option>
+          <option value="closed">Closed (TP2/Manual)</option>
+          <option value="sl">Stop Loss Hit</option>
+        </select>
+      </div>
+    </div>
+    <div class="field" id="exitPriceField" style="display:none;">
+      <label>Harga Exit Akhir</label>
+      <input type="number" id="mExit" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeModal()" style="flex:1; margin-top:0;">Batal</button>
+      <button class="btn" onclick="savePosition()" style="flex:1; margin-top:0;">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  BUFFON TRADING SYSTEM v3.1 — <span style="color:var(--text-main); font-weight:500;">SURVIVAL MODE</span> — IDR New Normal
+</footer>
+
+<script>
+// ── STATE ──
+let positions = JSON.parse(localStorage.getItem('buffon_pos') || '[]');
+let challengeData = JSON.parse(localStorage.getItem('buffon_challenge') || 'null') || new Array(30).fill(0);
+const CAPITAL = 25000000;
+const DAILY_LIMIT = 500000;
+
+function fmt(n) { return Math.round(n).toLocaleString('id-ID'); }
+function fmtRp(n) { return 'Rp ' + fmt(n); }
+function fmtPct(n) { return n.toFixed(1) + '%'; }
+
+// ── IDR REGIME ──
+function getRegime(idr) {
+  if (idr >= 17500) return { pct: 0.5, label: 'SURVIVAL', cap: 0.25, cls: 'survival' };
+  if (idr >= 17000) return { pct: 0.75, label: 'HIGH RISK', cap: 0.30, cls: 'high' };
+  if (idr >= 16500) return { pct: 0.85, label: 'ELEVATED', cap: 0.35, cls: 'high' };
+  return { pct: 1.0, label: 'FAVORABLE', cap: 0.40, cls: 'favorable' };
+}
+
+function updateIDR() {
+  const idr = parseFloat(document.getElementById('idrRate').value) || 17600;
+  const r = getRegime(idr);
+  const maxLoss = CAPITAL * (r.pct / 100);
+  const maxPos = CAPITAL * r.cap;
+
+  document.getElementById('idrRiskPct').textContent = r.pct + '%';
+  document.getElementById('idrMaxLoss').textContent = fmtRp(maxLoss);
+  document.getElementById('idrMaxPos').textContent = fmtPct(r.cap * 100) + ' — ' + fmtRp(maxPos);
+  
+  const regimeTxt = document.getElementById('idrRegimeTxt');
+  regimeTxt.textContent = r.label;
+  regimeTxt.className = 'strip-val ' + (r.cls === 'favorable' ? 'val-green' : r.cls === 'survival' ? 'val-red' : 'val-gold');
+
+  const badge = document.getElementById('regimeBadge');
+  badge.className = 'badge ' + r.cls;
+  document.getElementById('regimeText').textContent = r.label;
+
+  document.getElementById('riskPct').value = r.pct;
+  calc();
+}
+
+// ── CALCULATOR ──
+function calc() {
+  const capital = parseFloat(document.getElementById('capital').value) || 0;
+  const rPct = parseFloat(document.getElementById('riskPct').value) || 0;
+  const entry = parseFloat(document.getElementById('entry').value) || 0;
+  const sl = parseFloat(document.getElementById('sl').value) || 0;
+  const tp1 = parseFloat(document.getElementById('tp1').value) || 0;
+  const tp2 = parseFloat(document.getElementById('tp2').value) || 0;
+
+  const idr = parseFloat(document.getElementById('idrRate').value) || 17600;
+  const regime = getRegime(idr);
+  const maxPosValue = capital * regime.cap;
+
+  if (!capital || !entry || !sl || sl >= entry) return;
+
+  const maxLoss = capital * (rPct / 100);
+  const diff = entry - sl;
+  const slPct = (diff / entry) * 100;
+  const rawShares = maxLoss / diff;
+  const lots = Math.floor(rawShares / 100) * 100;
+  const posVal = lots * entry;
+  const posValPct = (posVal / capital) * 100;
+  const cappedLots = Math.floor(Math.min(posVal, maxPosValue) / entry / 100) * 100;
+  const finalPosVal = cappedLots * entry;
+
+  let rr = '—', profit = '—', profitPct = '—';
+  if (tp2 > entry && sl < entry) {
+    rr = ((tp2 - entry) / diff).toFixed(2) + ':1';
+    profit = fmtRp(cappedLots * (tp2 - entry));
+    profitPct = fmtPct((cappedLots * (tp2 - entry) / capital) * 100);
+  }
+
+  // Set DOM Values
+  document.getElementById('rMaxLoss').textContent = fmtRp(maxLoss);
+  document.getElementById('rMaxLossPct').textContent = fmtPct(rPct) + ' modal';
+  document.getElementById('rSlWidth').textContent = fmtPct(slPct);
+  document.getElementById('rShares').textContent = fmt(cappedLots);
+  document.getElementById('rPosVal').textContent = fmtRp(finalPosVal);
+  document.getElementById('rPosValPct').textContent = fmtPct((finalPosVal / capital) * 100) + ' modal';
+  document.getElementById('rRR').textContent = rr;
+  document.getElementById('rProfit').textContent = profit;
+  document.getElementById('rProfitPct').textContent = profitPct;
+
+  // Steps Update
+  document.getElementById('s1').textContent = fmtRp(capital);
+  document.getElementById('s2pct').textContent = fmtPct(rPct);
+  document.getElementById('s2').textContent = fmtRp(maxLoss);
+  document.getElementById('s3e').textContent = fmt(entry);
+  document.getElementById('s3s').textContent = fmt(sl);
+  document.getElementById('s3r').textContent = 'Rp ' + fmt(diff);
+  document.getElementById('s4a').textContent = fmt(maxLoss);
+  document.getElementById('s4b').textContent = fmt(diff);
+  document.getElementById('s4c').textContent = fmt(rawShares);
+  document.getElementById('s4lot').textContent = fmt(cappedLots);
+  document.getElementById('s5lots').textContent = fmt(cappedLots);
+  document.getElementById('s5e').textContent = fmt(entry);
+  document.getElementById('s5val').textContent = fmtRp(finalPosVal);
+
+  // TP Breakdown Update
+  const t1s = Math.floor(cappedLots * 0.40 / 100) * 100;
+  document.getElementById('tp1disp').textContent = tp1 ? fmtRp(tp1) + ' (+' + fmtPct(((tp1-entry)/entry)*100) + ')' : '—';
+  document.getElementById('tp1shares').textContent = fmt(t1s);
+  document.getElementById('tp2disp').textContent = tp2 ? fmtRp(tp2) + ' (+' + fmtPct(((tp2-entry)/entry)*100) + ')' : '—';
+  document.getElementById('tp2shares').textContent = fmt(t1s);
+  document.getElementById('tp2profit').textContent = tp2 ? fmtRp((t1s*(tp1-entry)) + (t1s*(tp2-entry))) : '—';
+  document.getElementById('runnerShares').textContent = fmt(cappedLots - (t1s * 2));
+
+  // Alerts
+  const alertEl = document.getElementById('alertBox');
+  alertEl.style.display = 'block';
+  if (slPct < 2.5) {
+    alertEl.className = 'alert-box warn';
+    alertEl.innerHTML = '⚠ <b>SL terlalu ketat</b> (' + fmtPct(slPct) + '). Noise market harian bisa menyentuh stop loss sebelum saham bergerak. Idealnya >3%.';
+  } else if ((posVal/capital) > regime.cap) {
+    alertEl.className = 'alert-box bad';
+    alertEl.innerHTML = '🚫 <b>Cap Maksimal Tercapai.</b> Risiko sizing melebihi ' + fmtPct(regime.cap*100) + '. Lot dipotong otomatis ke ' + fmt(cappedLots) + '.';
+  } else {
+    alertEl.className = 'alert-box ok';
+    alertEl.innerHTML = '✓ Sizing ideal dan sesuai dengan risk tolerance regime <b>' + regime.label + '</b>.';
+  }
+}
+
+// ── POSITIONS MODAL ──
+function openAddModal() {
+  const cap = parseFloat(document.getElementById('capital').value) || CAPITAL;
+  const en = parseFloat(document.getElementById('entry').value) || 0;
+  const sl = parseFloat(document.getElementById('sl').value) || 0;
+  const rp = parseFloat(document.getElementById('riskPct').value) || 0;
+  
+  let lots = 0;
+  if(en && sl && en > sl) {
+      const ml = cap * (rp/100);
+      lots = Math.floor((ml / (en-sl))/100)*100;
+  }
+
+  document.getElementById('mTicker').value = document.getElementById('ticker').value.toUpperCase();
+  document.getElementById('mEntry').value = en || '';
+  document.getElementById('mSL').value = sl || '';
+  document.getElementById('mTP1').value = document.getElementById('tp1').value || '';
+  document.getElementById('mTP2').value = document.getElementById('tp2').value || '';
+  document.getElementById('mLots').value = lots || '';
+  document.getElementById('mStatus').value = 'open';
+  document.getElementById('mExit').value = '';
+  document.getElementById('exitPriceField').style.display = 'none';
+  
+  document.getElementById('addModal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('addModal').classList.remove('open'); }
+
+document.getElementById('mStatus').addEventListener('change', (e) => {
+  document.getElementById('exitPriceField').style.display = ['closed','sl'].includes(e.target.value) ? 'block' : 'none';
+});
+
+function savePosition() {
+  const t = document.getElementById('mTicker').value.trim();
+  const l = parseInt(document.getElementById('mLots').value) || 0;
+  const en = parseFloat(document.getElementById('mEntry').value) || 0;
+  const sl = parseFloat(document.getElementById('mSL').value) || 0;
+  if (!t || !l || !en || !sl) { alert('Lengkapi data esensial (Ticker, Lot, Entry, SL)'); return; }
+
+  const tp1 = parseFloat(document.getElementById('mTP1').value) || 0;
+  const tp2 = parseFloat(document.getElementById('mTP2').value) || 0;
+  const st = document.getElementById('mStatus').value;
+  const ex = parseFloat(document.getElementById('mExit').value) || 0;
+
+  let pnl = 0;
+  if (st === 'closed' && ex) pnl = (ex - en) * l;
+  else if (st === 'sl') pnl = (sl - en) * l;
+  else if (st === 'tp1') pnl = (tp1 - en) * l * 0.4; 
+
+  positions.push({ id: Date.now(), ticker: t, lots: l, entry: en, sl, tp1, tp2, status: st, exitPrice: ex, pnl, date: new Date().toLocaleDateString('id-ID') });
+  
+  localStorage.setItem('buffon_pos', JSON.stringify(positions));
+  renderPositions();
+  updateSummary();
+  closeModal();
+}
+
+function delPos(id) {
+  positions = positions.filter(p => p.id !== id);
+  localStorage.setItem('buffon_pos', JSON.stringify(positions));
+  renderPositions(); updateSummary();
+}
+
+function clearPositions() {
+  if(confirm('Hapus seluruh riwayat posisi?')) {
+    positions = [];
+    localStorage.setItem('buffon_pos', '[]');
+    renderPositions(); updateSummary();
+  }
+}
+
+// ── RENDER DATA ──
+function renderPositions() {
+  const c = document.getElementById('positionsContainer');
+  if (!positions.length) {
+    c.innerHTML = '<div class="empty-state">Belum ada posisi. Isi kalkulator lalu klik "Tambah ke Posisi Saya"</div>';
+    return;
+  }
+
+  const badges = { open:'st-open', tp1:'st-tp1', closed:'st-closed', sl:'st-sl' };
+  const lbls = { open:'Open', tp1:'TP1 Hit', closed:'Closed', sl:'SL Hit' };
+
+  let html = `<div style="overflow-x:auto"><table class="positions-table">
+    <thead><tr><th>Ticker</th><th>Date</th><th>Lot</th><th>Entry</th><th>SL</th><th>TP1/TP2</th><th>Status</th><th>P&L</th><th></th></tr></thead><tbody>`;
+  
+  positions.forEach(p => {
+    const slP = (((p.entry - p.sl)/p.entry)*100).toFixed(1);
+    const pnlTxt = p.pnl !== 0 ? (p.pnl > 0 ? '+' : '') + fmtRp(p.pnl) : '—';
+    const pnlCol = p.pnl > 0 ? 'var(--green)' : p.pnl < 0 ? 'var(--red)' : 'var(--text-muted)';
+    html += `
+      <tr>
+        <td><span class="ticker-badge">${p.ticker}</span></td>
+        <td style="font-size:12px; color:var(--text-muted)">${p.date}</td>
+        <td>${fmt(p.lots)}</td>
+        <td>${fmtRp(p.entry)}</td>
+        <td><span style="color:var(--red)">${fmtRp(p.sl)}</span><br><span style="font-size:11px; color:var(--text-muted)">${slP}%</span></td>
+        <td>${p.tp1 ? fmtRp(p.tp1) : '—'} / ${p.tp2 ? fmtRp(p.tp2) : '—'}</td>
+        <td><span class="status-pill ${badges[p.status]}">${lbls[p.status]}</span></td>
+        <td style="color:${pnlCol}; font-weight:600">${pnlTxt}</td>
+        <td><button class="btn-small" onclick="delPos(${p.id})">✕</button></td>
+      </tr>`;
+  });
+  c.innerHTML = html + `</tbody></table></div>`;
+}
+
+function updateSummary() {
+  const openPos = positions.filter(p => p.status === 'open' || p.status === 'tp1');
+  const closedPos = positions.filter(p => p.status === 'closed' || p.status === 'sl');
+  const totalPnl = positions.reduce((s, p) => s + (p.pnl || 0), 0);
+  const today = new Date().toLocaleDateString('id-ID');
+  const dPnl = positions.filter(p => p.date === today).reduce((s, p) => s + (p.pnl || 0), 0);
+  const openVal = openPos.reduce((s, p) => s + (p.lots * p.entry), 0);
+  
+  const wins = closedPos.filter(p => p.pnl > 0).length;
+  const wr = closedPos.length ? ((wins / closedPos.length) * 100).toFixed(0) + '%' : '—';
+
+  // Master Summary
+  const pEl = document.getElementById('sumPnl');
+  pEl.textContent = (totalPnl > 0 ? '+' : '') + fmtRp(totalPnl);
+  pEl.className = 'strip-val ' + (totalPnl > 0 ? 'val-green' : totalPnl < 0 ? 'val-red' : '');
+  
+  document.getElementById('sumPnlPct').textContent = (totalPnl > 0 ? '+' : '') + ((totalPnl/CAPITAL)*100).toFixed(2) + '%';
+  document.getElementById('sumOpenPos').textContent = openPos.length;
+  document.getElementById('sumOpenVal').textContent = fmtRp(openVal) + ' exposed';
+  document.getElementById('sumWinRate').textContent = wr;
+  document.getElementById('sumWinRateSub').textContent = closedPos.length + ' trades closed';
+
+  // Daily Status
+  const dpEl = document.getElementById('sumDailyPnl');
+  dpEl.textContent = (dPnl > 0 ? '+' : '') + fmtRp(dPnl);
+  dpEl.className = 'strip-val ' + (dPnl > 0 ? 'val-green' : dPnl < 0 ? 'val-red' : '');
+  
+  document.getElementById('ddPnl').textContent = dpEl.textContent;
+  document.getElementById('ddPnl').style.color = dPnl > 0 ? 'var(--green)' : dPnl < 0 ? 'var(--red)' : 'var(--text-main)';
+  
+  const ddUsed = Math.max(0, -dPnl);
+  const ddPct = Math.min((ddUsed/DAILY_LIMIT)*100, 100);
+  document.getElementById('ddRemain').textContent = fmtRp(Math.max(0, DAILY_LIMIT - ddUsed));
+  document.getElementById('ddBar').style.width = ddPct + '%';
+  document.getElementById('ddBar').style.background = ddPct > 80 ? 'var(--red)' : ddPct > 50 ? 'var(--gold)' : 'var(--green)';
+  document.getElementById('ddStatus').textContent = ddPct.toFixed(0) + '% limit terpakai' + (ddPct >= 100 ? ' — STOP TRADING HARI INI' : '');
+  if(ddPct >= 100) document.getElementById('ddStatus').style.color = 'var(--red)';
+}
+
+// ── 30-TRADE CHALLENGE ──
+function renderChallenge() {
+  const g = document.getElementById('challengeGrid');
+  g.innerHTML = '';
+  challengeData.forEach((s, i) => {
+    const d = document.createElement('div');
+    d.className = 'trade-dot' + (s===1 ? ' win' : s===2 ? ' loss' : s===3 ? ' violation' : '');
+    d.textContent = i + 1;
+    d.onclick = () => {
+      challengeData[i] = (s + 1) % 4;
+      localStorage.setItem('buffon_challenge', JSON.stringify(challengeData));
+      renderChallenge();
+    };
+    g.appendChild(d);
+  });
+  
+  const w = challengeData.filter(x=>x===1).length;
+  const l = challengeData.filter(x=>x===2).length;
+  const v = challengeData.filter(x=>x===3).length;
+  const done = w+l+v;
+  
+  let streak = 0;
+  for(let i=challengeData.length-1; i>=0; i--) {
+    if(challengeData[i]===3 || challengeData[i]===0) break;
+    streak++;
+  }
+
+  document.getElementById('challengeBar').style.width = (done/30*100) + '%';
+  document.getElementById('challengeInfo').innerHTML = `
+    <div class="strip-item"><div class="strip-label">Completed</div><div class="strip-val val-accent">${done}/30</div></div>
+    <div class="strip-item"><div class="strip-label">Wins</div><div class="strip-val val-green">${w}</div></div>
+    <div class="strip-item"><div class="strip-label">Losses</div><div class="strip-val" style="color:var(--text-muted)">${l}</div></div>
+    <div class="strip-item"><div class="strip-label">Violations</div><div class="strip-val ${v>0?'val-gold':''}">${v}</div></div>
+    <div class="strip-item"><div class="strip-label">Win Rate</div><div class="strip-val">${(w+l)>0 ? Math.round(w/(w+l)*100)+'%' : '—'}</div></div>
+    <div class="strip-item"><div class="strip-label">Clean Streak</div><div class="strip-val ${streak>=10?'val-green':''}">${streak}</div></div>
+  `;
+}
+
+function resetChallenge() {
+  if(confirm('Reset Tracker Challenge?')) {
+    challengeData = new Array(30).fill(0);
+    localStorage.setItem('buffon_challenge', JSON.stringify(challengeData));
+    renderChallenge();
+  }
+}
+
+// ── LISTENERS & INIT ──
+['capital','riskPct','entry','sl','tp1','tp2'].forEach(id => document.getElementById(id).addEventListener('input', calc));
+document.getElementById('idrRate').addEventListener('input', updateIDR);
+
+updateIDR();
+renderPositions();
+updateSummary();
+renderChallenge();
+</script>
+</body>
+</html>
