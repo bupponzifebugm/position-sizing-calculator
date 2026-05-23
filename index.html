@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BUFFON — System v3.1</title>
+<title>BUFFON — Execution Engine v4.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
@@ -29,7 +29,6 @@
     --font-sans: 'Inter', sans-serif;
     --font-serif: 'Playfair Display', serif;
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
     --shadow-lg: 0 20px 40px rgba(0,0,0,0.15);
   }
 
@@ -62,14 +61,6 @@
   .card-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
   .card-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* CAPITAL TIER STRIP */
-  .strip { display: flex; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
-  .strip-item { flex: 1; min-width: 140px; }
-  .strip-label { font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
-  .strip-val { font-size: 22px; font-weight: 600; color: var(--text-main); }
-  .strip-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-  .val-accent { color: var(--accent); } .val-red { color: var(--red); }
-
   /* DRAWDOWN SLIDER */
   .dd-slider-container { width: 100%; margin-bottom: 32px; }
   .dd-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding-bottom: 12px; scrollbar-width: none; }
@@ -99,10 +90,9 @@
   .result-val { font-size: 18px; font-weight: 600; color: var(--text-main); }
   .result-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
-  /* STEPS */
+  /* LISTS & STEPS */
   .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; font-size: 13px; color: var(--text-muted); }
   .step-n { width: 24px; height: 24px; border-radius: 12px; background: var(--border-dark); color: var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
-  .step b { color: var(--text-main); font-weight: 600; }
   ul.system-list { list-style: none; margin-left: 0; font-size: 13px; color: var(--text-muted); }
   ul.system-list li { margin-bottom: 12px; display: flex; gap: 8px; }
   ul.system-list li::before { content: '•'; color: var(--accent); font-weight: bold; }
@@ -139,24 +129,34 @@
   .system-table { width: 100%; border-collapse: collapse; font-size: 13px; }
   .system-table th { text-align: left; padding: 12px; background: var(--bg); font-weight: 600; color: var(--text-main); border: 1px solid var(--border); }
   .system-table td { padding: 12px; border: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
-  .system-table td b { color: var(--text-main); }
   .ticker-badge { font-weight: 600; color: var(--text-main); }
   .status-pill { display: inline-flex; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
   .st-open { background: var(--green-bg); color: var(--green); } .st-tp1 { background: var(--purple-bg); color: var(--purple); }
   .st-closed { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border-dark); } .st-sl { background: var(--red-bg); color: var(--red); }
   .empty-state { text-align: center; padding: 48px 24px; color: var(--text-muted); font-size: 14px; border: 1px dashed var(--border-dark); border-radius: 12px; }
 
-  /* JOURNAL (NOTION-STYLE) */
-  .journal-toolbar { display: flex; gap: 8px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center; position: sticky; top: 0; background: var(--surface); z-index: 10; }
-  .journal-toolbar button, .journal-toolbar label { padding: 6px 12px; font-size: 13px; font-weight: 600; background: var(--surface-hover); border: 1px solid var(--border-dark); border-radius: 6px; cursor: pointer; color: var(--text-main); transition: all 0.2s; }
+  /* JOURNAL DATABASE */
+  .journal-layout { display: grid; grid-template-columns: 260px 1fr; gap: 24px; min-height: 70vh; }
+  @media (max-width: 768px) { .journal-layout { grid-template-columns: 1fr; } }
+  .journal-sidebar { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .journal-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+  .journal-item { padding: 12px; border-radius: 8px; background: var(--bg); border: 1px solid transparent; cursor: pointer; transition: all 0.2s; }
+  .journal-item:hover { border-color: var(--border-dark); }
+  .journal-item.active { background: var(--surface); border-color: var(--accent); box-shadow: var(--shadow-sm); }
+  .journal-item-title { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  
+  .journal-main { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; }
+  .journal-toolbar { display: flex; gap: 8px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center; }
+  .journal-toolbar button, .journal-toolbar label { padding: 6px 12px; font-size: 13px; font-weight: 600; background: var(--surface-hover); border: 1px solid var(--border-dark); border-radius: 6px; cursor: pointer; color: var(--text-main); transition: all 0.2s; display:inline-block;}
   .journal-toolbar button:hover, .journal-toolbar label:hover { background: var(--bg); border-color: var(--accent); color: var(--accent); }
-  .journal-editor { min-height: 60vh; outline: none; padding: 8px 0; font-size: 15px; line-height: 1.7; color: var(--text-main); font-family: var(--font-sans); }
-  .journal-editor:empty:before { content: attr(placeholder); color: var(--text-muted); pointer-events: none; display: block; font-style: italic; }
-  .journal-editor h1 { font-size: 28px; margin: 24px 0 12px 0; font-family: var(--font-serif); font-weight: 600; }
-  .journal-editor h2 { font-size: 20px; margin: 20px 0 10px 0; font-weight: 600; }
-  .journal-editor img { max-width: 100%; border-radius: 8px; margin: 16px 0; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
-  .journal-editor ul { margin-left: 24px; margin-bottom: 16px; }
-  .journal-editor li { margin-bottom: 6px; }
+  .journal-title-input { width: 100%; border: none; font-size: 28px; font-family: var(--font-serif); font-weight: 600; color: var(--text-main); outline: none; margin-bottom: 16px; background: transparent; }
+  .journal-editor { flex: 1; outline: none; padding: 8px 0; font-size: 15px; line-height: 1.7; color: var(--text-main); font-family: var(--font-sans); min-height: 400px; }
+  .journal-editor img { max-width: 100%; border-radius: 8px; margin: 16px 0; border: 1px solid var(--border); }
+  
+  /* QUOTES TAB */
+  .quote-card { text-align: center; padding: 64px 24px; min-height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+  .quote-text { font-family: var(--font-serif); font-size: 28px; font-style: italic; color: var(--text-main); max-width: 800px; line-height: 1.4; margin-bottom: 24px; }
+  .quote-author { font-size: 14px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; }
 
   /* MODALS */
   .modal-overlay { position: fixed; inset: 0; background: rgba(45, 43, 42, 0.85); backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: center; justify-content: center; }
@@ -202,7 +202,7 @@
   <header>
     <div class="header-inner">
       <div>
-        <div class="logo">BUFFON <span>/</span> EXECUTION ENGINE <span>/</span> v3.1</div>
+        <div class="logo">BUFFON <span>/</span> EXECUTION ENGINE <span>/</span> v4.0</div>
         <div class="title-block"><h1>Capital & Protocol System</h1></div>
       </div>
       <div class="badge survival">
@@ -216,11 +216,12 @@
     <button class="tab-btn" onclick="switchTab('tab-risk')">Risk & Drawdown</button>
     <button class="tab-btn" onclick="switchTab('tab-system')">Trading System</button>
     <button class="tab-btn" onclick="switchTab('tab-journal')">Journal / Notes</button>
+    <button class="tab-btn" onclick="switchTab('tab-quotes')">Wisdom & Quotes</button>
   </div>
 
   <div id="tab-execute" class="tab-content active">
     <div class="dd-slider-container">
-      <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; margin-bottom:12px; letter-spacing:0.05em;">Live Drawdown Monitor (Scroll/Swipe)</div>
+      <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; margin-bottom:12px; letter-spacing:0.05em;">Live Drawdown Monitor</div>
       <div class="dd-slider">
         <div class="dd-card">
           <div class="dd-header"><span>Daily P&L Limit (2%)</span><span class="dd-limit" id="limitDailyDisp">-Rp 200.000</span></div>
@@ -243,39 +244,19 @@
       </div>
     </div>
 
-    <div class="card strip">
-      <div class="strip-item">
-        <div class="strip-label">Active Capital Tier</div>
-        <div class="strip-val val-accent" id="activeCapDisp">Rp 10.000.000</div>
-        <div class="strip-sub" id="streakSubDisp">0 clean trades streak</div>
-      </div>
-      <div class="strip-item">
-        <div class="strip-label">Risk Per Trade (0.5%)</div>
-        <div class="strip-val val-red" id="maxLossDisp">Rp 50.000</div>
-        <div class="strip-sub">Hard Stop Cap</div>
-      </div>
-      <div class="strip-item">
-        <div class="strip-label">Max Position (25%)</div>
-        <div class="strip-val" id="posCapDisp">Rp 2.500.000</div>
-        <div class="strip-sub">Maximum Exposure</div>
-      </div>
-      <div class="strip-item" style="flex:1.5; min-width:200px;">
-        <div class="strip-label">Next Capital Upgrade</div>
-        <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px;">
-          <span id="nextTierLabel">Rp 15M Unlock</span>
-          <span id="streakCountDisp">0/10</span>
-        </div>
-        <div class="progress-bg" style="margin-top:0"><div class="progress-fill" id="upgradeBar" style="width:0%; background:var(--accent)"></div></div>
-      </div>
-    </div>
-
     <div class="grid-2">
       <div class="card">
         <div class="card-title">Position Sizing Calculator</div>
 
-        <div class="field">
-          <label>Ticker</label>
-          <input type="text" id="ticker" placeholder="BREN" maxlength="6" style="text-transform:uppercase;" />
+        <div class="field-row">
+          <div class="field">
+            <label>Ticker</label>
+            <input type="text" id="ticker" placeholder="BREN" maxlength="6" style="text-transform:uppercase;" />
+          </div>
+          <div class="field">
+            <label>Modal Active (Rp)</label>
+            <input type="number" id="capital" value="10000000" step="100000" style="font-weight:600; color:var(--accent);" />
+          </div>
         </div>
 
         <div class="field">
@@ -348,13 +329,16 @@
         <div class="card">
           <div class="card-title">30-Trade Challenge Tracker</div>
           <div style="font-size:12px; color:var(--text-muted); line-height:1.4;">
-            Violation <span style="color:var(--gold); font-weight:600">(Gold)</span> resets your clean streak to zero. Capital scaling relies strictly on this counter. Click dots to change status.
+            Violation <span style="color:var(--gold); font-weight:600">(Gold)</span> resets your streak. The Modal Box calculates limits based on your input, but use this to track execution integrity.
           </div>
           <div class="challenge-grid" id="challengeGrid"></div>
-          <div class="challenge-legend">
-            <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div> Win</div>
-            <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div> Loss (Clean)</div>
-            <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div> Violation</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
+            <div class="challenge-legend" style="margin-top:0;">
+              <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div> Win</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div> Loss</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div> Violation</div>
+            </div>
+            <div style="font-size:12px; font-weight:600;"><span id="streakCountDisp">0</span> Clean Streak</div>
           </div>
         </div>
       </div>
@@ -374,72 +358,45 @@
   <div id="tab-system" class="tab-content">
     <div class="grid-2">
       <div class="card">
-        <div class="card-title">1. Bot Verification & Priority Stack</div>
-        <div style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Algo Trade bot picks are the FIRST filter. Read in this exact order. Any INSTANT FAIL = Skip immediately.</div>
+        <div class="card-title">1. Pre-Market & Algo Bot Stack</div>
         <ul class="system-list">
-          <li><span><b>Bot Score:</b> Must be ≥ 80. Below 75 is an instant fail. Do not rationalize a 74.</span></li>
-          <li><span><b>Stage:</b> Must be EARLY_SETUP or EARLY_CONFIRM. Extended = skip.</span></li>
-          <li><span><b style="color:var(--red)">Asing (Foreign):</b> Must be BUYING or Neutral. SELLING = INSTANT SKIP. Always.</span></li>
-          <li><span><b>Bandar Net:</b> Must be > +0.1% of market cap. Negative = no conviction.</span></li>
-          <li><span><b>Top 3 Buyers:</b> Look for AK, CC, XL, OD, MU. (MG dominant alone = goreng warning).</span></li>
-          <li><span><b>YP Position:</b> YP must NOT be in the top 3 buyers (retail driven = late signal).</span></li>
-          <li><span><b>Volume:</b> Must be ≥ 1.5x above 5-day average.</span></li>
-          <li><span><b>2-Day Confirmation:</b> Must see 2 consecutive days of accumulation before entry (exception: Score 90+).</span></li>
+          <li><span><b>Macro Check:</b> Look at NIKKEI & KOSPI. If red -> passive -> wait for rebound. If green -> can go aggressive.</span></li>
+          <li><span><b>Bot Score:</b> Must be ≥ 80. Below 75 is an instant fail. Do not rationalize.</span></li>
+          <li><span><b>Stage:</b> Must be EARLY_SETUP or EARLY_CONFIRM.</span></li>
+          <li><span><b style="color:var(--red)">Asing (Foreign):</b> Must be BUYING or Neutral. SELLING = INSTANT SKIP.</span></li>
+          <li><span><b>Bandarmology:</b> Broker summary must show green buy acc. Bandar must be stuck at higher price. AVOID distribution stocks.</span></li>
+          <li><span><b>YP Position:</b> YP must NOT be dominant buyer.</span></li>
+          <li><span><b>Divergence:</b> Look for bullish divergence on charts.</span></li>
+          <li><span><b>IHSG Rotation:</b> Look at current IHSG rotation flows.</span></li>
         </ul>
       </div>
 
       <div class="card">
-        <div class="card-title">2. Execution & TP Protocol</div>
+        <div class="card-title">2. Execution & Psychology</div>
         <ul class="system-list">
-          <li><span><b>Morning Routine:</b> Wake 08:00. Check USD/IDR at 08:30. Determine Risk %. Assess Wall Street/News. Focus < 7 = No Trade.</span></li>
-          <li><span><b>Entry:</b> Enter ONLY if price enters pre-marked zone. No chasing ever.</span></li>
-          <li><span><b>Stop Loss:</b> Placed IMMEDIATELY after order fill. Never move SL further from entry. Never average down.</span></li>
-          <li><span><b>Take Profit 1:</b> At +7.5% hit, sell exactly 40%. IMMEDIATELY move SL to breakeven. (Trade is now free).</span></li>
-          <li><span><b>Take Profit 2:</b> At +18% hit, sell 40%. (Locks in 2:1 R:R target).</span></li>
-          <li><span><b>Runner:</b> Trail the remaining 20% below each higher swing low. Exit on breakdown.</span></li>
-          <li><span><b>Hard Close:</b> ALL positions flat at 09:30 on class days, 11:00 on free days.</span></li>
+          <li><span><b>Trading Hours:</b> 1-2 hours only. 08:30 – 10:30 ish.</span></li>
+          <li><span><b>Red Days / Gap Down:</b> 2-3% profit is more than enough. Scalping cuan.</span></li>
+          <li><span><b>Risk Management:</b> Stop loss on 2%. Reduce sizing position to avoid volatility.</span></li>
+          <li><span><b>Rule 1:</b> Loss is a lesson.</span></li>
+          <li><span><b>Rule 2:</b> Follow system, but loss is still a win.</span></li>
+          <li><span><b>Rule 3:</b> NO Revenge trade.</span></li>
+          <li><span><b>Rule 4:</b> Discipline in your life. Have fun. Check your energy levels.</span></li>
+          <li><span><b>Rule 5:</b> No entering at peak. Do not move stop loss.</span></li>
+          <li><span><b>Rule 6:</b> Don't trade unplanned trades. Cut loss is love. No trade is best choice.</span></li>
         </ul>
       </div>
     </div>
 
     <div class="card">
       <div class="card-title">3. Sector Rotation Playbook</div>
-      <div style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Use these patterns to identify early institutional accumulation before retail FOMO.</div>
       <div style="overflow-x:auto;">
         <table class="system-table">
-          <thead>
-            <tr>
-              <th>Rotation Type</th>
-              <th>How to Identify Early</th>
-              <th>Entry Window</th>
-              <th>Exit Signal</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Rotation Type</th><th>How to Identify Early</th><th>Entry Window</th><th>Exit Signal</th></tr></thead>
           <tbody>
-            <tr>
-              <td><b>Conglomerate Chain</b></td>
-              <td>First group (e.g. BNBR) pumps with AK/CC accumulation.</td>
-              <td>Identify the <b>next group</b> in the chain before it pumps.</td>
-              <td>YP becomes dominant in the next group = distribution starting.</td>
-            </tr>
-            <tr>
-              <td><b>MBG Beneficiary</b></td>
-              <td>Govt contract news or disbursement announcements.</td>
-              <td>Food/Logistics stocks on the day of or day after news.</td>
-              <td>Contract priced in; volume drops back to average.</td>
-            </tr>
-            <tr>
-              <td><b>Commodity Spike</b></td>
-              <td>Oil/CPO/Coal global price move >3% overnight.</td>
-              <td>MEDC, ADRO, BUMI type on open.</td>
-              <td>Commodity price reverses or profit-taking volume spikes.</td>
-            </tr>
-            <tr>
-              <td><b>Defensive Rotation</b></td>
-              <td>IHSG red 3+ days, high fear sentiment.</td>
-              <td>TLKM, Consumer staples on dip.</td>
-              <td>IHSG stabilizes, risk-on returns, sector rotates out.</td>
-            </tr>
+            <tr><td><b>Conglomerate Chain</b></td><td>First group pumps with AK/CC acc.</td><td>Identify next group before pump.</td><td>YP becomes dominant (distribution).</td></tr>
+            <tr><td><b>MBG Beneficiary</b></td><td>Govt contract news / disbursement.</td><td>Food/Logistics on day of news.</td><td>Volume drops back to average.</td></tr>
+            <tr><td><b>Commodity Spike</b></td><td>Global price move >3% overnight.</td><td>MEDC, ADRO type on open.</td><td>Commodity price reverses.</td></tr>
+            <tr><td><b>Defensive Rotation</b></td><td>IHSG red 3+ days, high fear.</td><td>TLKM, Consumer staples on dip.</td><td>IHSG stabilizes, risk-on returns.</td></tr>
           </tbody>
         </table>
       </div>
@@ -447,28 +404,46 @@
   </div>
 
   <div id="tab-journal" class="tab-content">
-    <div class="card" style="min-height: 70vh;">
-      <div class="card-title">Trading Journal & Reflections</div>
+    <div class="journal-layout">
       
-      <div class="journal-toolbar">
-        <button onclick="formatDoc('formatBlock', 'H1')">Title (H1)</button>
-        <button onclick="formatDoc('formatBlock', 'H2')">Header (H2)</button>
-        <button onclick="formatDoc('bold')"><b>B</b></button>
-        <button onclick="formatDoc('italic')"><i>I</i></button>
-        <button onclick="formatDoc('insertUnorderedList')">Bullet List</button>
-        
-        <label>
-          📷 Add Image
-          <input type="file" accept="image/*" style="display:none;" onchange="insertImage(event)">
-        </label>
-        
-        <div style="flex:1"></div>
-        <button onclick="saveJournal()" style="border-color:var(--green); color:var(--green); background:var(--green-bg);">Save Notes</button>
+      <div class="journal-sidebar">
+        <button class="btn" onclick="createNewNote()" style="margin:0; padding:10px;">+ New Journal Entry</button>
+        <div style="font-size:11px; font-weight:600; color:var(--text-muted); margin-top:12px; text-transform:uppercase;">My Notes</div>
+        <div class="journal-list" id="journalList"></div>
       </div>
 
-      <div id="journalEditor" contenteditable="true" class="journal-editor" placeholder="Start typing your thesis, daily reflections, or paste images here..."></div>
-      <div id="journalSaveStatus" style="font-size:12px; color:var(--green); margin-top:12px; text-align:right; font-weight:600; display:none;">✓ Journal saved to local storage.</div>
-      <div id="journalErrorStatus" style="font-size:12px; color:var(--red); margin-top:12px; text-align:right; font-weight:600; display:none;">🚫 Storage Limit Exceeded! Images might be too large.</div>
+      <div class="journal-main" id="journalMainArea" style="display:none;">
+        <input type="text" id="noteTitle" class="journal-title-input" placeholder="Untitled Entry" oninput="autoSaveNote()">
+        
+        <div class="journal-toolbar">
+          <button onclick="formatDoc('formatBlock', 'H1')">H1</button>
+          <button onclick="formatDoc('formatBlock', 'H2')">H2</button>
+          <button onclick="formatDoc('bold')"><b>B</b></button>
+          <button onclick="formatDoc('italic')"><i>I</i></button>
+          <button onclick="formatDoc('insertUnorderedList')">List</button>
+          
+          <label style="margin:0;">
+            📷 Upload Image
+            <input type="file" accept="image/*" style="display:none;" onchange="insertCompressedImage(event)">
+          </label>
+          
+          <div style="flex:1"></div>
+          <button onclick="deleteCurrentNote()" style="border-color:var(--red); color:var(--red); background:transparent;">Delete Note</button>
+          <button onclick="forceSaveNote()" style="border-color:var(--green); color:var(--green); background:var(--green-bg);">Save</button>
+        </div>
+
+        <div id="noteEditor" contenteditable="true" class="journal-editor" placeholder="Start typing your thesis, daily reflections, or upload images here..." oninput="autoSaveNote()"></div>
+        <div id="noteSaveStatus" style="font-size:12px; color:var(--green); margin-top:12px; text-align:right; font-weight:600; display:none;">✓ Saved locally.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="tab-quotes" class="tab-content">
+    <div class="card quote-card">
+      <div id="quoteText" class="quote-text">"There is a time to go long, a time to go short, and a time to go fishing."</div>
+      <div id="quoteAuthor" class="quote-author">— Jesse Livermore</div>
+      <button class="btn secondary" onclick="generateQuote()" style="margin-top: 48px; width: auto; padding: 10px 32px;">Generate New Quote</button>
     </div>
   </div>
 
@@ -514,11 +489,10 @@
 
 <script>
 // ── STATE VARIABLES ──
-let positions = JSON.parse(localStorage.getItem('buffon_pos_v4') || '[]');
-let challengeData = JSON.parse(localStorage.getItem('buffon_challenge_v4') || 'null') || new Array(30).fill(0);
+let positions = JSON.parse(localStorage.getItem('buffon_pos_v6') || '[]');
+let challengeData = JSON.parse(localStorage.getItem('buffon_challenge_v6') || 'null') || new Array(30).fill(0);
+let notes = JSON.parse(localStorage.getItem('buffon_notes_v6') || '[]');
 
-let activeCapital = 10000000; 
-let cleanStreak = 0;
 const RISK_PCT = 0.5; // Locked to Survival Mode per v3.1 rules
 const MAX_CAP_PCT = 0.25;
 
@@ -533,132 +507,70 @@ function switchTab(tabId) {
   document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
   document.getElementById(tabId).classList.add('active');
   event.target.classList.add('active');
+  if(tabId === 'tab-quotes') generateQuote();
 }
-
-// ── JOURNAL / NOTION LOGIC ──
-function formatDoc(cmd, value=null) {
-  document.execCommand(cmd, false, value);
-  document.getElementById('journalEditor').focus();
-}
-
-function insertImage(e) {
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    formatDoc('insertImage', event.target.result);
-  };
-  reader.readAsDataURL(file);
-}
-
-function saveJournal() {
-  const content = document.getElementById('journalEditor').innerHTML;
-  const successMsg = document.getElementById('journalSaveStatus');
-  const errorMsg = document.getElementById('journalErrorStatus');
-  
-  try {
-    localStorage.setItem('buffon_journal_v4', content);
-    successMsg.style.display = 'block';
-    errorMsg.style.display = 'none';
-    setTimeout(() => successMsg.style.display = 'none', 3000);
-  } catch(e) {
-    // If local storage is full (usually because images are too large / exceed 5MB limit)
-    errorMsg.style.display = 'block';
-    successMsg.style.display = 'none';
-    console.error("Storage Error:", e);
-  }
-}
-
-// Load Journal on startup
-document.getElementById('journalEditor').innerHTML = localStorage.getItem('buffon_journal_v4') || '';
-
-// Auto-save journal every 10 seconds if typing
-setInterval(() => {
-  const currentContent = document.getElementById('journalEditor').innerHTML;
-  const savedContent = localStorage.getItem('buffon_journal_v4');
-  if (currentContent !== savedContent && currentContent.trim() !== '') {
-    try { localStorage.setItem('buffon_journal_v4', currentContent); } catch(e) {}
-  }
-}, 10000);
-
 
 // ── MORNING GATE LOGIC ──
 function unlockPlatform() {
   const focus = parseInt(document.getElementById('mgFocus').value) || 0;
   const macro = document.getElementById('mgMacro').value;
   const err = document.getElementById('mgError');
-
   if (focus < 7) {
     err.style.display = 'block';
     err.textContent = "CRITICAL FAIL: Focus score below 7. Protocol dictates no trading today. Do not proceed.";
     return;
   }
-  
-  if (macro === 'red') {
-    alert("DEFENSIVE PROTOCOL: Macro is Red. Wait 30 minutes after market open before entering any trades.");
-  }
-
+  if (macro === 'red') alert("DEFENSIVE PROTOCOL: Macro is Red. Wait 30 minutes after market open before entering any trades.");
   document.getElementById('morningGate').classList.remove('open');
   
-  // Initialize Core Logic
   calculateCapitalTier();
   calcSizing();
   renderPositions();
+  renderNoteList();
 }
 
-// ── DYNAMIC CAPITAL SCALING ──
+// ── CAPITAL SCALING & CALCULATOR ──
+function getActiveCapital() {
+  return parseFloat(document.getElementById('capital').value) || 10000000;
+}
+
 function calculateCapitalTier() {
-  cleanStreak = 0;
-  // Calculate continuous valid streak (1=win, 2=loss). 3=violation resets it.
+  let cleanStreak = 0;
   for (let i = 0; i < 30; i++) {
-    if (challengeData[i] === 1 || challengeData[i] === 2) {
-      cleanStreak++;
-    } else if (challengeData[i] === 3) {
-      cleanStreak = 0;
-    } else if (challengeData[i] === 0) {
-      break; 
-    }
+    if (challengeData[i] === 1 || challengeData[i] === 2) cleanStreak++;
+    else if (challengeData[i] === 3) cleanStreak = 0;
+    else if (challengeData[i] === 0) break; 
   }
 
-  // Determine Tier based on streak
-  if (cleanStreak >= 30) activeCapital = 25000000;
-  else if (cleanStreak >= 20) activeCapital = 20000000;
-  else if (cleanStreak >= 10) activeCapital = 15000000;
-  else activeCapital = 10000000;
-
-  // Update UI Elements
-  document.getElementById('activeCapDisp').textContent = fmtRp(activeCapital);
-  document.getElementById('streakSubDisp').textContent = `${cleanStreak} unbroken trades`;
-  document.getElementById('maxLossDisp').textContent = fmtRp(activeCapital * (RISK_PCT/100));
-  document.getElementById('posCapDisp').textContent = fmtRp(activeCapital * MAX_CAP_PCT);
-
-  // Upgrade Progress Bar
-  let nextTarget = 10, currentProg = cleanStreak, label = "Rp 15M Unlock";
-  if (cleanStreak >= 30) { nextTarget = 30; currentProg = 30; label = "MAX TIER REACHED (25M)"; }
-  else if (cleanStreak >= 20) { nextTarget = 30; label = "Rp 25M Unlock"; }
-  else if (cleanStreak >= 10) { nextTarget = 20; label = "Rp 20M Unlock"; }
+  // Determine auto-tier hint (user can still manually override box)
+  let autoCap = 10000000;
+  if (cleanStreak >= 30) autoCap = 25000000;
+  else if (cleanStreak >= 20) autoCap = 20000000;
+  else if (cleanStreak >= 10) autoCap = 15000000;
   
-  document.getElementById('nextTierLabel').textContent = label;
-  document.getElementById('streakCountDisp').textContent = `${currentProg}/${nextTarget}`;
-  document.getElementById('upgradeBar').style.width = Math.min((currentProg/nextTarget)*100, 100) + '%';
+  // Set default if it's the start, otherwise respect user manual input
+  if(document.getElementById('capital').value == "10000000" && cleanStreak > 0) {
+    document.getElementById('capital').value = autoCap;
+  }
   
-  // Run dependent functions
+  document.getElementById('streakCountDisp').textContent = cleanStreak;
+
   updateDrawdownMonitor();
   calcSizing(); 
 }
 
-// ── SYNC & SIZING CALCULATOR ──
 const inputs = {
   entry: document.getElementById('entry'),
   sl: document.getElementById('sl'), slPct: document.getElementById('slPct'),
   tp1: document.getElementById('tp1'), tp1Pct: document.getElementById('tp1Pct'),
-  tp2: document.getElementById('tp2'), tp2Pct: document.getElementById('tp2Pct')
+  tp2: document.getElementById('tp2'), tp2Pct: document.getElementById('tp2Pct'),
+  cap: document.getElementById('capital')
 };
 
 function calcPriceFromPct(type) {
   const entry = parseFloat(inputs.entry.value) || 0;
-  if (!entry) return;
   const pct = parseFloat(inputs[type + 'Pct'].value) || 0;
+  if (!entry) return;
   if (type === 'sl') inputs.sl.value = Math.round(entry - (entry * (pct / 100)));
   else inputs[type].value = Math.round(entry + (entry * (pct / 100)));
   calcSizing();
@@ -666,19 +578,14 @@ function calcPriceFromPct(type) {
 
 function calcPctFromPrice(type) {
   const entry = parseFloat(inputs.entry.value) || 0;
-  if (!entry) return;
   const price = parseFloat(inputs[type].value) || 0;
-  if (!price) return;
+  if (!entry || !price) return;
   if (type === 'sl') inputs.slPct.value = (((entry - price) / entry) * 100).toFixed(2);
   else inputs[type + 'Pct'].value = (((price - entry) / entry) * 100).toFixed(2);
   calcSizing();
 }
 
-function syncAllFromEntry() { 
-    calcPriceFromPct('sl'); 
-    calcPriceFromPct('tp1'); 
-    calcPriceFromPct('tp2'); 
-}
+function syncAllFromEntry() { calcPriceFromPct('sl'); calcPriceFromPct('tp1'); calcPriceFromPct('tp2'); }
 
 inputs.slPct.addEventListener('input', () => calcPriceFromPct('sl'));
 inputs.tp1Pct.addEventListener('input', () => calcPriceFromPct('tp1'));
@@ -687,8 +594,10 @@ inputs.sl.addEventListener('input', () => calcPctFromPrice('sl'));
 inputs.tp1.addEventListener('input', () => calcPctFromPrice('tp1'));
 inputs.tp2.addEventListener('input', () => calcPctFromPrice('tp2'));
 inputs.entry.addEventListener('input', syncAllFromEntry);
+inputs.cap.addEventListener('input', () => { updateDrawdownMonitor(); calcSizing(); });
 
 function calcSizing() {
+  const cap = getActiveCapital();
   const entry = parseFloat(inputs.entry.value) || 0;
   const sl = parseFloat(inputs.sl.value) || 0;
   const tp1 = parseFloat(inputs.tp1.value) || 0;
@@ -696,9 +605,8 @@ function calcSizing() {
 
   if (!entry || !sl || sl >= entry) return;
 
-  const maxLoss = activeCapital * (RISK_PCT / 100);
-  const maxPosValue = activeCapital * MAX_CAP_PCT;
-  
+  const maxLoss = cap * (RISK_PCT / 100);
+  const maxPosValue = cap * MAX_CAP_PCT;
   const diff = entry - sl;
   const slPct = (diff / entry) * 100;
   
@@ -708,14 +616,12 @@ function calcSizing() {
   const finalPosVal = cappedLots * entry;
 
   let rr = '—';
-  if (tp2 > entry && sl < entry) {
-    rr = ((tp2 - entry) / diff).toFixed(2) + ':1';
-  }
+  if (tp2 > entry && sl < entry) rr = ((tp2 - entry) / diff).toFixed(2) + ':1';
 
   document.getElementById('rMaxLoss').textContent = fmtRp(cappedLots * diff);
   document.getElementById('rShares').textContent = fmt(cappedLots);
   document.getElementById('rPosVal').textContent = fmtRp(finalPosVal);
-  document.getElementById('rPosValPct').textContent = fmtPct((finalPosVal/activeCapital)*100) + ' Modal';
+  document.getElementById('rPosValPct').textContent = fmtPct((finalPosVal/cap)*100) + ' Modal';
   document.getElementById('rRR').textContent = rr;
 
   const t1s = Math.floor(cappedLots * 0.40 / 100) * 100; 
@@ -770,7 +676,6 @@ function savePosition() {
   const lots = parseInt(document.getElementById('mLots').value) || 0;
   const entry = parseFloat(document.getElementById('mEntry').value) || 0;
   const sl = parseFloat(document.getElementById('mSL').value) || 0;
-  
   if (!ticker || !lots || !entry || !sl) { alert('Lengkapi Ticker, Lot, Entry, dan SL.'); return; }
 
   const tp1 = parseFloat(document.getElementById('mTP1').value) || 0;
@@ -784,22 +689,21 @@ function savePosition() {
   else if (status === 'tp1') pnl = (tp1 - entry) * (lots * 0.4) * 100; 
 
   positions.push({ id: Date.now(), ticker, lots, entry, sl, tp1, tp2, status, exitPrice, pnl, date: new Date().toLocaleDateString('id-ID') });
-  
-  localStorage.setItem('buffon_pos_v4', JSON.stringify(positions));
+  localStorage.setItem('buffon_pos_v6', JSON.stringify(positions));
   renderPositions();
   closeModal();
 }
 
 function delPos(id) {
   positions = positions.filter(p => p.id !== id);
-  localStorage.setItem('buffon_pos_v4', JSON.stringify(positions));
+  localStorage.setItem('buffon_pos_v6', JSON.stringify(positions));
   renderPositions(); 
 }
 
 function clearPositions() {
   if(confirm('Hapus seluruh riwayat posisi lokal?')) {
     positions = [];
-    localStorage.setItem('buffon_pos_v4', '[]');
+    localStorage.setItem('buffon_pos_v6', '[]');
     renderPositions();
   }
 }
@@ -835,16 +739,16 @@ function renderPositions() {
       </tr>`;
   });
   c.innerHTML = html + `</tbody></table></div>`;
-  
   updateDrawdownMonitor(); 
 }
 
-// ── DRAWDOWN MONITOR LOGIC ──
+// ── DRAWDOWN MONITOR ──
 function updateDrawdownMonitor() {
+  const cap = getActiveCapital();
   const totalPnl = positions.reduce((acc, p) => acc + (p.pnl || 0), 0);
-  const dailyL = activeCapital * 0.02;
-  const weeklyL = activeCapital * 0.03;
-  const monthlyL = activeCapital * 0.07;
+  const dailyL = cap * 0.02;
+  const weeklyL = cap * 0.03;
+  const monthlyL = cap * 0.07;
 
   document.getElementById('limitDailyDisp').textContent = "-Rp " + fmt(dailyL);
   document.getElementById('limitWeeklyDisp').textContent = "-Rp " + fmt(weeklyL);
@@ -857,7 +761,6 @@ function updateDrawdownMonitor() {
     
     const loss = Math.max(0, -val);
     const pct = Math.min((loss / limit) * 100, 100);
-    
     document.getElementById(barId).style.width = pct + "%";
     document.getElementById(barId).style.background = pct > 80 ? "var(--red)" : pct > 50 ? "var(--gold)" : "var(--green)";
     
@@ -879,7 +782,7 @@ function updateDrawdownMonitor() {
   displayPnl('pnlMonthlyDisp', totalPnl, monthlyL, 'barMonthly', 'actMonthlyDisp', "LIMIT HIT. 5-Day Pause Mandated.");
 }
 
-// ── 30-TRADE CHALLENGE TRACKER ──
+// ── 30-TRADE CHALLENGE ──
 function renderChallenge() {
   const g = document.getElementById('challengeGrid');
   g.innerHTML = '';
@@ -889,7 +792,7 @@ function renderChallenge() {
     d.textContent = i + 1;
     d.onclick = () => {
       challengeData[i] = (s + 1) % 4;
-      localStorage.setItem('buffon_challenge_v4', JSON.stringify(challengeData));
+      localStorage.setItem('buffon_challenge_v6', JSON.stringify(challengeData));
       renderChallenge();
       calculateCapitalTier(); 
     };
@@ -897,7 +800,143 @@ function renderChallenge() {
   });
 }
 
-// Initialize Tracker Dots
+// ── JOURNAL / NOTION DATABASE LOGIC ──
+let activeNoteId = null;
+
+function renderNoteList() {
+  const list = document.getElementById('journalList');
+  list.innerHTML = '';
+  if (notes.length === 0) {
+    list.innerHTML = '<div style="font-size:12px; color:var(--text-muted); padding: 12px; text-align:center;">No notes yet.</div>';
+    document.getElementById('journalMainArea').style.display = 'none';
+    return;
+  }
+
+  notes.sort((a,b) => b.id - a.id).forEach(note => {
+    const div = document.createElement('div');
+    div.className = 'journal-item' + (note.id === activeNoteId ? ' active' : '');
+    div.innerHTML = `
+      <div class="journal-item-title">${note.title || 'Untitled Entry'}</div>
+    `;
+    div.onclick = () => openNote(note.id);
+    list.appendChild(div);
+  });
+}
+
+function createNewNote() {
+  const newNote = { id: Date.now(), title: '', content: '' };
+  notes.push(newNote);
+  saveNotesToStorage();
+  openNote(newNote.id);
+}
+
+function openNote(id) {
+  activeNoteId = id;
+  const note = notes.find(n => n.id === id);
+  if (!note) return;
+  
+  document.getElementById('journalMainArea').style.display = 'flex';
+  document.getElementById('noteTitle').value = note.title;
+  document.getElementById('noteEditor').innerHTML = note.content;
+  renderNoteList();
+}
+
+function autoSaveNote() {
+  if (!activeNoteId) return;
+  const note = notes.find(n => n.id === activeNoteId);
+  if (note) {
+    note.title = document.getElementById('noteTitle').value;
+    note.content = document.getElementById('noteEditor').innerHTML;
+    saveNotesToStorage();
+    renderNoteList(); 
+  }
+}
+
+function forceSaveNote() {
+  autoSaveNote();
+  const msg = document.getElementById('noteSaveStatus');
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 2000);
+}
+
+function deleteCurrentNote() {
+  if (!activeNoteId) return;
+  if(confirm("Delete this journal entry?")) {
+    notes = notes.filter(n => n.id !== activeNoteId);
+    activeNoteId = null;
+    saveNotesToStorage();
+    document.getElementById('journalMainArea').style.display = 'none';
+    renderNoteList();
+  }
+}
+
+function saveNotesToStorage() {
+  try {
+    localStorage.setItem('buffon_notes_v6', JSON.stringify(notes));
+  } catch(e) {
+    alert("Storage limit reached! Please delete some old images or text.");
+  }
+}
+
+function formatDoc(cmd, value=null) {
+  document.execCommand(cmd, false, value);
+  document.getElementById('noteEditor').focus();
+  autoSaveNote();
+}
+
+// ── CLIENT-SIDE IMAGE COMPRESSION (Fixes 5MB Crash) ──
+function insertCompressedImage(e) {
+  const file = e.target.files[0];
+  if(!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 800; // Resize to max 800px width
+      let width = img.width;
+      let height = img.height;
+      
+      if (width > MAX_WIDTH) {
+        height *= MAX_WIDTH / width;
+        width = MAX_WIDTH;
+      }
+      
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      
+      // Compress to JPEG at 70% quality to save extreme space
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      formatDoc('insertImage', dataUrl);
+    }
+    img.src = event.target.result;
+  }
+  reader.readAsDataURL(file);
+}
+
+// ── QUOTES RANDOMIZER ──
+const quotes = [
+  { text: "The diligent earn wealth, but the hasty only experience poverty.", author: "Proverbs 21:5" },
+  { text: "Divide your investments among many places, for you do not know what risks might lie ahead.", author: "Ecclesiastes 11:2" },
+  { text: "There is a time to go long, a time to go short, and a time to go fishing.", author: "Jesse Livermore" },
+  { text: "If you cannot control your emotions, you cannot control your money.", author: "Warren Buffett" },
+  { text: "Victorious warriors win first and then go to war, while defeated warriors go to war first and then seek to win.", author: "Sun Tzu" },
+  { text: "Every trade is just one out of a thousand. It has no special meaning. Execute the system.", author: "Mark Douglas" },
+  { text: "The most important rule of trading is to play great defense, not great offense.", author: "Paul Tudor Jones" },
+  { text: "Don't ever quit trading. You are building a lifelong skill. Protect your capital, protect the streak, and survive.", author: "System Mandate" },
+  { text: "Loss is a lesson. Cut loss is love. Follow the system, and a loss is still a win.", author: "Buffon's Thesis" }
+];
+
+function generateQuote() {
+  const q = quotes[Math.floor(Math.random() * quotes.length)];
+  document.getElementById('quoteText').textContent = `"${q.text}"`;
+  document.getElementById('quoteAuthor').textContent = `— ${q.author}`;
+}
+
+// ── INIT ──
 renderChallenge();
 </script>
 </body>
